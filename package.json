@@ -1,0 +1,27 @@
+{
+  "name": "bidbot",
+  "version": "1.0.0",
+  "description": "Arbiter of auctions and raffles",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spleenboy/bidbot.git"
+  },
+  "keywords": [
+    "slack",
+    "slackbot",
+    "node.js"
+  ],
+  "author": "Barrett Alexander",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spleenboy/bidbot/issues"
+  },
+  "homepage": "https://github.com/spleenboy/bidbot#readme",
+  "dependencies": {
+    "slack-client": "^1.5.1"
+  }
+}
