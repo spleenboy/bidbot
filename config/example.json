@@ -1,4 +1,10 @@
 {
     "slackToken": "",
-    "username": ""
+    "username": "",
+    "database": {
+        "name": "",
+        "username": "",
+        "password": "",
+        "settings": {}
+    }
 }
