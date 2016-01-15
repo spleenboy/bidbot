@@ -2,9 +2,11 @@
 
 const _ = require('lodash');
 const moment = require('moment');
-const config = require('./config/local.json');
-const Models = require('./models');
-const messages = require('./config/messages');
+const config = require('../config/local.json');
+const messages = require('../config/messages');
+
+const Models = require('../models');
+const Winners = require('./winners');
 
 module.exports = class Bot {
     constructor(slack) {
@@ -34,6 +36,9 @@ module.exports = class Bot {
 
 
     open() {
+        this.winners = new Winners();
+        this.winners.on('won', this.bidWon.bind(this));
+        this.winners.track();
         console.log(`Connected to ${this.slack.team.name} as @${this.slack.self.name}`);
     }
 
@@ -186,6 +191,7 @@ module.exports = class Bot {
                     }
                 })
                 .spread((bid, created) => {
+                    bid.item = item;
                     if (item.type === "auction") {
                         exchange.bidId = bid.id;
                         exchange.wanting = "getBidPrice";
@@ -347,11 +353,17 @@ module.exports = class Bot {
             if (!item) {
                 return null;
             }
-            if (item.channelId) item.channel = this.slack.getChannelGroupOrDMByID(item.channelId);
-            if (item.sellerId) item.seller = this.slack.getUserByID(item.sellerId);
-            if (item.endsOn) item.deadline = moment(item.endsOn).fromNow();
+            this.decorateItem(item);
             return item;
         });
+    }
+
+
+    decorateItem(item) {
+        if (!item) return;
+        if (item.channelId) item.channel = this.slack.getChannelGroupOrDMByID(item.channelId);
+        if (item.sellerId) item.seller = this.slack.getUserByID(item.sellerId);
+        if (item.endsOn) item.deadline = moment(item.endsOn).fromNow();
     }
 
 
@@ -361,9 +373,16 @@ module.exports = class Bot {
             return this.getFullItem(bid.itemId)
             .then((item) => {
                 bid.item = item;
+                this.decorateBid(bid);
                 return bid;
             });
         });
+    }
+
+
+    decorateBid(bid) {
+        if (!bid) return;
+        if (bid.buyerId) bid.buyer = this.buyerId = this.slack.getUserByID(bid.buyerId);
     }
 
 
@@ -372,5 +391,19 @@ module.exports = class Bot {
             where: {itemId: itemId},
             order: 'price DESC',
         });
+    }
+
+
+    bidWon(item, bid) {
+        this.decorateItem(item);
+        this.decorateBid(bid);
+
+        if (!item.channel) {
+            console.error("No channel found for winning bid on item", item, bid);
+        }
+
+        item.winner = bid;
+        let state = bid ? item.type + "Won" : item.type + "Lost";
+        this.say(item.channel, state, item);
     }
 }

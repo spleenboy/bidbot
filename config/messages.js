@@ -8,12 +8,13 @@ const Messages = {
         ["Okay!"],
         ["Sure."],
         ["Sounds good."],
-        [":moneybag:"]
+        [":moneybag:"],
     ],
     "confused": [
         ["I don't get you."],
         ["You talk funny."],
-        ["Huh?"]
+        ["Huh?"],
+        ["I think you're intentionally trying to confuse me."],
     ],
     "abandoned": [
         ["Whatever you're trying to do: I want none of it."],
@@ -42,8 +43,8 @@ const Messages = {
         [(bid) => `Awesome! I got your ${bid.price > 0 ? '$' + bid.price : ''} bid for _${bid.item.name}_`],
     ],
     "bidReceivedAlready": [
-        [(item) => `You've already bid on _${item.name}_.`, "It's a raffle. One bid per person.", "Cheater."],
-        [(item) => `You've already bid on _${item.name}_.`, ":poop::poop::poop:"],
+        [(bid) => `You've already bid on _${bid.item.name}_.`, "It's a raffle. One bid per person.", "Cheater."],
+        [(bid) => `You've already bid on _${bid.item.name}_.`, ":poop::poop::poop:"],
     ],
     "bidTooLow": [
         ["Cheapskate!", (bid) => `That's below the current high bid of \$${bid.price}.`],
@@ -101,6 +102,21 @@ Should I do it?`;
 > ${item.description}\n
 The ${item.type} ends ${item.deadline}. Act fast! DM if you want to bid.`;
         }],
+    ],
+
+
+    // Winners
+    "raffleWon": [
+        [(item) => `@{$item.seller.name}'s raffle for _${item.name}_ is over and @${item.winner.user.name} won!`],
+    ],
+    "raffleLost": [
+        [(item) => `@{$item.seller.name}'s raffle for _${item.name}_ is done, but nobody wanted it. :cricket:`],
+    ],
+    "auctionWon": [
+        [(item) => `@{$item.seller.name}'s raffle for _${item.name}_ is over and @${item.winner.user.name} won with a bid of \$${item.winner.price}. :dollar:`],
+    ],
+    "auctionLost": [
+        [(item) => `@{$item.seller.name}'s auction for _${item.name}_ is done, but nobody wanted it. :cry:`],
     ],
 };
 
