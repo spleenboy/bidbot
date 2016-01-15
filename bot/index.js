@@ -4,6 +4,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const config = require('../config/local.json');
 const messages = require('../config/messages');
+const logger = require('./logger');
 
 const Models = require('../models');
 const Winners = require('./winners');
@@ -12,7 +13,7 @@ module.exports = class Bot {
     constructor(slack) {
         Models.sync()
         .then(() => {
-            console.info("Models synced");
+            logger.info("Models synced");
             if (slack) {
                 this.connect(slack);
             }
@@ -39,12 +40,12 @@ module.exports = class Bot {
         this.winners = new Winners();
         this.winners.on('won', this.bidWon.bind(this));
         this.winners.track();
-        console.log(`Connected to ${this.slack.team.name} as @${this.slack.self.name}`);
+        logger.info(`Connected to ${this.slack.team.name} as @${this.slack.self.name}`);
     }
 
 
     error(err, text) {
-        console.error(text || 'Slack error', err);
+        logger.error(text || 'Slack error', err);
     }
 
 
@@ -64,7 +65,7 @@ module.exports = class Bot {
                 msg = msg(ctx || channel);
             }
             if (!msg) {
-                console.error("No value for key", key, msg);
+                logger.error("No value for key", key, msg);
                 return;
             }
             channel.send(msg);
@@ -317,7 +318,7 @@ module.exports = class Bot {
     getItemChannel(exchange, msg) {
         const channelId = msg.getChannelId();
         if (channelId === false || !this.slack.getChannelGroupOrDMByID(channelId)) {
-            console.error("Invalid channel", channelId, msg.text);
+            logger.error("Invalid channel", channelId, msg.text);
             this.say(msg.channel, "confused");
             this.say(msg.channel, "getItemChannel");
             return;
@@ -399,11 +400,11 @@ module.exports = class Bot {
         this.decorateBid(bid);
 
         if (!item.channel) {
-            console.error("No channel found for winning bid on item", item, bid);
+            logger.error("No channel found for winning bid on item", item, bid);
         }
 
         item.winner = bid;
-        console.info("Winner winner", item);
+        logger.info("Winner winner", item);
         let state = bid ? item.type + "Won" : item.type + "Lost";
         this.say(item.channel, state, item);
     }

@@ -2,7 +2,10 @@ const Messages = {
     "greeting": [
         ["Hello!"],
         ["Howdy"],
-        [":derp:"]
+        [":derp::derp::derp:"],
+        ["What's up, home skillet?"],
+        ["Hey is for :horse:"],
+        ["Hello, moneybags."],
     ],
     "okay": [
         ["Okay!"],
@@ -15,15 +18,21 @@ const Messages = {
         ["You talk funny."],
         ["Huh?"],
         ["I think you're intentionally trying to confuse me."],
+        ["Whatchutalkinbout?"],
+        ["You think you're better than me?"],
     ],
     "abandoned": [
         ["Whatever you're trying to do: I want none of it."],
+        ["Pbbbl. Whatever. :stuck_out_tongue_winking_eye:"],
+        ["Let's pretend this never happened."],
     ],
     "error": [
         [(err) => `Something just went horribly wrong. \`${err}\``],
     ],
     "getAction": [
-        ["Would you like to bid on something, auction something, or raffle something?"]
+        ["Would you like to bid on something, auction something, or raffle something?"],
+        ["bid, auction, or raffle?"],
+        ["You again? What do you want? (bid, auction, or raffle)"],
     ],
 
     // Bidding
@@ -98,25 +107,25 @@ Should I do it?`;
     "itemPost": [
         [(item) => {
             const what = item.type === 'auction' ? 'an auction' : 'a raffle';
-            return `@${item.seller.name} is holding ${what} for *${item.name}*\n
+            return `<@${item.sellerId}> is holding ${what} for *${item.name}*\n
 > ${item.description}\n
-The ${item.type} ends ${item.deadline}. Act fast! DM if you want to bid.`;
+The ${item.type} ends ${item.deadline}. Act fast! DM me if you want to bid.`;
         }],
     ],
 
 
     // Winners
     "raffleWon": [
-        [(item) => `@${item.seller.name}'s raffle for _${item.name}_ is over and @${item.winner.buyer.name} won! Winner winner :chicken: dinner.`],
+        [(item) => `<@${item.sellerId}>'s raffle for _${item.name}_ is over and <@${item.winner.buyerId}> won! Winner winner :chicken: dinner.`],
     ],
     "raffleLost": [
-        [(item) => `@${item.seller.name}'s raffle for _${item.name}_ is done, but nobody wanted it. :cricket:`],
+        [(item) => `<@${item.sellerId}>'s raffle for _${item.name}_ is done, but nobody wanted it. :cricket:`],
     ],
     "auctionWon": [
-        [(item) => `@${item.seller.name}'s raffle for _${item.name}_ is over and @${item.winner.buyer.name} won with a bid of \$${item.winner.price}. :dollar:`],
+        [(item) => `<@${item.sellerId}>'s raffle for _${item.name}_ is over and <@${item.winner.buyerId}> won with a bid of \$${item.winner.price}. :dollar:`],
     ],
     "auctionLost": [
-        [(item) => `@${item.seller.name}'s auction for _${item.name}_ is done, but nobody wanted it. :cry:`],
+        [(item) => `<@${item.sellerId}>'s auction for _${item.name}_ is done, but nobody wanted it. :cry:`],
     ],
 };
 

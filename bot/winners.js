@@ -3,6 +3,7 @@
 const EventEmitter = require('events');
 const _ = require('lodash');
 const Models = require('../models');
+const logger = require('./logger');
 const INTERVAL_MS = 1000;
 
 // This module enforces the deadlines of auctions and raffles
@@ -10,7 +11,7 @@ const INTERVAL_MS = 1000;
 module.exports = class Timer extends EventEmitter {
     track() {
         this.ticker = setInterval(this.tick.bind(this), INTERVAL_MS);
-        console.info("Starting interval to track winners");
+        logger.info("Starting interval to track winners");
     }
 
     tick() {
@@ -35,7 +36,7 @@ module.exports = class Timer extends EventEmitter {
         } else if (item.type === "auction") {
             this.endAuction(item);
         } else {
-            console.error("You added a new item type without telling me! How could you?");
+            logger.error("You added a new item type without telling me! How could you?");
         }
     }
 

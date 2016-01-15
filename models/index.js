@@ -1,6 +1,7 @@
 "use strict";
 
 const connection = require('./connection');
+const logger = require('../bot/logger');
 
 module.exports = {
     connection: connection,
@@ -16,6 +17,6 @@ module.exports = {
     },
 
     migrate() {
-        console.error("I don't migrate often, but when I do, I use sequelize/umzug.");
+        logger.error("I don't migrate often, but when I do, I use sequelize/umzug.");
     },
 };

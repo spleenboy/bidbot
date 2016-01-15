@@ -1,6 +1,12 @@
 {
     "slackToken": "",
     "pause": 1000,
+    "logger": {
+        "name": "bidbot",
+        "streams": [
+            {"path": "./data/bidbot.log"}
+        ]
+    },
     "database": {
         "name": "bidbot",
         "username": "",
