@@ -2,9 +2,12 @@
 
 const Sequelize = require('sequelize');
 const connection = require('./connection');
+const Item = require('./item');
 const Bid = require('./bid');
 
-const Name = 'item';
+// An exchange tracks the last thing the bot said to someone.
+// This is necessary to allow asynchronous conversations.
+const Name = 'exchange';
 
 const Schema = {
     id: {
@@ -13,39 +16,28 @@ const Schema = {
         unique: true,
         primaryKey: true,
     },
+    userId: {
+        type: Sequelize.STRING,
+    },
     channelId: {
         type: Sequelize.STRING,
     },
-    sellerId: {
-        type: Sequelize.STRING,
+    itemId: {
+        type: Sequelize.UUID,
+        references: {
+            model: Item,
+            key: 'id',
+        }
     },
-    type: {
-        type: Sequelize.ENUM('auction', 'raffle'),
-    },
-    name: {
-        type: Sequelize.STRING,
-    },
-    description: {
-        type: Sequelize.STRING,
-    },
-    price: {
-        type: Sequelize.DECIMAL(10, 2),
-    },
-    active: {
-        type: Sequelize.BOOLEAN,
-    },
-    startsOn: {
-        type: Sequelize.DATE,
-    },
-    endsOn: {
-        type: Sequelize.DATE,
-    },
-    winnerId: {
+    bidId: {
         type: Sequelize.UUID,
         references: {
             model: Bid,
             key: 'id',
         }
+    },
+    wanting: {
+        type: Sequelize.STRING,
     },
 };
 
