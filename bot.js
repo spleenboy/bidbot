@@ -58,6 +58,10 @@ module.exports = class Bot {
             if (_.isFunction(msg)) {
                 msg = msg(ctx || channel);
             }
+            if (!msg) {
+                console.error("No value for key", key, msg);
+                return;
+            }
             channel.send(msg);
         }
 
@@ -77,7 +81,7 @@ module.exports = class Bot {
 
         let delay = 0;
         chosen.forEach(msg => {
-            setTimeout(send.bind(channel, msg), delay);
+            setTimeout(send.bind(this, msg), delay);
             delay += config.pause;
         });
         return chosen.join("\n");
@@ -168,22 +172,21 @@ module.exports = class Bot {
     }
 
 
-    getItemFieldValue(exchange, msg, field, nextStep) {
+    getItemFieldValue(exchange, msg, field, value, nextStep) {
         if (!exchange.itemId) {
             this.say(msg.channel, "confused");
             this.getAction(exchange, msg);
             return;
         }
 
-        Models.Item
-        .findOne({where: {id: exchange.itemId}})
+        this.getFullItem(exchange.itemId)
         .then((item) => {
             if (!item) {
                 this.say(msg.channel, "error", `Couldn't find your item with id ${exchange.itemId}`);
                 return;
             }
 
-            item[field] = msg.text;
+            item[field] = value;
             item.save();
 
             this.say(msg.channel, nextStep, item);
@@ -194,12 +197,12 @@ module.exports = class Bot {
 
 
     getItemName(exchange, msg) {
-        this.getItemFieldValue(exchange, msg, "name", "getItemDescription");
+        this.getItemFieldValue(exchange, msg, "name", msg.text, "getItemDescription");
     }
 
 
     getItemDescription(exchange, msg) {
-        this.getItemFieldValue(exchange, msg, "description", "getItemPrice");
+        this.getItemFieldValue(exchange, msg, "description", msg.text, "getItemPrice");
     }
 
 
@@ -208,11 +211,14 @@ module.exports = class Bot {
         if (amount === false) {
             // Try again.
             this.say(msg.channel, "confused");
-            this.say(msg.channel, "getItemPrice");
+
+            this.getFullItem(exchange.itemId)
+            .then((item) => {
+                this.say(msg.channel, "getItemPrice", item);
+            })
             return;
         }
-        msg.text = amount;
-        this.getItemFieldValue(exchange, msg, "price", "getItemEndsOn");
+        this.getItemFieldValue(exchange, msg, "price", amount, "getItemEndsOn");
     }
 
 
@@ -223,7 +229,47 @@ module.exports = class Bot {
             this.say(msg.channel, "getItemEndsOn");
             return;
         }
-        msg.text = endsOn;
-        this.getItemFieldValue(exchange, msg, "endsOn", "getItemChannel");
+        this.getItemFieldValue(exchange, msg, "endsOn", endsOn, "getItemChannel");
+    }
+
+
+    getItemChannel(exchange, msg) {
+        const channelId = msg.getChannelId();
+        if (channelId === false || !this.slack.getChannelGroupOrDMByID(channelId)) {
+            console.error("Invalid channel", channelId, msg.text);
+            this.say(msg.channel, "confused");
+            this.say(msg.channel, "getItemChannel");
+            return;
+        }
+        this.getItemFieldValue(exchange, msg, "channelId", channelId, "confirmItemSale");
+    }
+
+
+    confirmItemSale(exchange, msg) {
+        this.getFullItem(exchange.itemId)
+        .then((item) => {
+            if (msg.hasConfirmation()) {
+                this.say(item.channel, "itemPost", item);
+                this.say(msg.channel, "itemSaleConfirmed", item);
+                exchange.destroy();
+            } else if (msg.hasDenial()) {
+                this.say(msg.channel, "itemSaleCanceled", item);
+                exchange.destroy();
+            } else {
+                this.say(msg.channel, "confused");
+                this.say(msg.channel, "confirmItemSale", item);
+            }
+        });
+    }
+
+
+    getFullItem(id) {
+        return Models.Item.findById(id)
+        .then((item) => {
+            if (item.channelId) item.channel = this.slack.getChannelGroupOrDMByID(item.channelId);
+            if (item.sellerId) item.seller = this.slack.getUserByID(item.sellerId);
+            if (item.endsOn) item.deadline = moment(item.endsOn).fromNow();
+            return item;
+        });
     }
 }

@@ -18,7 +18,6 @@ module.exports = class SlackMessage {
     hasWord(word) {
         const search = new RegExp(`(\b|^)${word}(\b|$)`, 'i');
         const matches = search.test(this.text);
-        console.log(matches, 'testing', this.text, 'against', search);
         return matches
     }
 
@@ -55,6 +54,13 @@ module.exports = class SlackMessage {
             }
         }
         return date.toDate();
+    }
+
+
+    getChannelId() {
+        const check = /<#(C[a-zA-Z0-9]+)(\||>)/;
+        const matches = check.exec(this.text);
+        return matches ? matches[1] : false;
     }
 
 

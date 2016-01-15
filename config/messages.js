@@ -1,4 +1,4 @@
-module.exports = {
+const Messages = {
     "greeting": [
         ["Hello!"],
         ["Howdy"],
@@ -44,23 +44,47 @@ module.exports = {
         [(ctx) => `What do you want to call your ${ctx.type}?`]
     ],
     "getItemDescription": [
-        [(ctx) => `Please describe _${ctx.name}_ for your ${ctx.type}.`]
+        [(ctx) => `Please describe _${ctx.name}_.`]
     ],
     "getItemPrice": [
         [(item) => {
-            return 
-                item.type === "raffle"
-                ? "How much do you want to for it?"
-                : "What is your starting price?";
+            if (item.type === "raffle") {
+                return "How much do you want to for it?"
+            } else {
+                return "What is your starting price?";
+            }
         }]
     ],
     "getItemEndsOn": [
         [(ctx) => `How long would you like the ${ctx.type} to last?`] 
     ],
     "getItemChannel": [
-        [(ctx) => `Where would you like to post this ${ctx.type}?`]
+        [(ctx) => `In which channel would you like to post this ${ctx.type}?`]
     ],
     "confirmItemSale": [
-        ["Okay. I'll put up the post for you."]
+        [(item) => {
+            const what = item.type === 'auction' ? 'an auction' : 'a raffle';
+            return `Here's basically what I want to post\n
+> @${item.seller.name} is holding ${what} for *${item.name}*\n
+> ${item.description}\n
+> The ${item.type} ends ${item.deadline}.\n
+Should I do it?`;
+        }]
+    ],
+    "itemSaleConfirmed": [
+        ["It's up!"]
+    ],
+    "itemSaleCanceled": [
+        ["All that work for nothing?", (item) => `Okay. Fine. I canceled the ${item.type}.`],
+    ],
+    "itemPost": [
+        [(item) => {
+            const what = item.type === 'auction' ? 'an auction' : 'a raffle';
+            return `@${item.seller.name} is holding ${what} for *${item.name}*\n
+> ${item.description}\n
+The ${item.type} ends ${item.deadline}. Act fast! DM if you want to bid.`;
+        }],
     ],
 };
+
+module.exports = Messages;
