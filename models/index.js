@@ -8,8 +8,9 @@ module.exports = {
     Sequelize: require('sequelize'),
     Item: require('./item'),
     Bid: require('./bid'),
+    SlackMessage: require('./slack-message'),
 
-    install() {
+    sync() {
         return connection.sync();
     },
 

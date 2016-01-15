@@ -9,6 +9,7 @@ const Name = 'item';
 const Schema = {
     id: {
         type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         unique: true,
         primaryKey: true,
     },
@@ -18,8 +19,8 @@ const Schema = {
     sellerId: {
         type: Sequelize.STRING,
     },
-    active: {
-        type: Sequelize.BOOLEAN,
+    type: {
+        type: Sequelize.ENUM('auction', 'raffle'),
     },
     name: {
         type: Sequelize.STRING,
@@ -27,21 +28,21 @@ const Schema = {
     price: {
         type: Sequelize.DECIMAL(10, 2),
     },
-    winnerId: {
-        type: Sequelize.UUID,
-        references: {
-            model: Bid,
-            key: 'id',
-        }
-    },
-    type: {
-        type: Sequelize.ENUM('auction', 'raffle'),
+    active: {
+        type: Sequelize.BOOLEAN,
     },
     startsOn: {
         type: Sequelize.DATE,
     },
     endsOn: {
         type: Sequelize.DATE,
+    },
+    winnerId: {
+        type: Sequelize.UUID,
+        references: {
+            model: Bid,
+            key: 'id',
+        }
     },
 };
 

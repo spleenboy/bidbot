@@ -1,10 +1,13 @@
 {
     "slackToken": "",
-    "username": "",
+    "pause": 1000,
     "database": {
-        "name": "",
+        "name": "bidbot",
         "username": "",
         "password": "",
-        "settings": {}
+        "settings": {
+            "dialect": "sqlite",
+            "storage": ":memory:"
+        }
     }
 }

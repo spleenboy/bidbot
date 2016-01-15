@@ -23,9 +23,11 @@
   },
   "homepage": "https://github.com/spleenboy/bidbot#readme",
   "dependencies": {
+    "lodash": "^4.0.0",
     "moment": "^2.11.1",
     "mysql": "^2.10.2",
     "sequelize": "^3.17.1",
-    "slack-client": "^1.5.1"
+    "slack-client": "^1.5.1",
+    "sqlite3": "^3.1.1"
   }
 }

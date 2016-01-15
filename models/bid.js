@@ -9,6 +9,7 @@ const Name = 'bid';
 const Schema = {
     id: {
         type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         unique: true,
         primaryKey: true,
     },
