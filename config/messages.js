@@ -6,6 +6,7 @@ const Messages = {
         ["What's up, home skillet?"],
         ["Hey is for :horse:"],
         ["Hello, moneybags."],
+        ["..."],
     ],
     "okay": [
         ["Okay!"],
@@ -20,6 +21,7 @@ const Messages = {
         ["I think you're intentionally trying to confuse me."],
         ["Whatchutalkinbout?"],
         ["You think you're better than me?"],
+        ["Beep. Boop. Beep", "Does not compute."],
     ],
     "abandoned": [
         ["Whatever you're trying to do: I want none of it."],
@@ -62,7 +64,12 @@ const Messages = {
         ["Okay. Here are the things I know about"],
     ],
     "noItemsForBid": [
-        ["I feel so worthless.", "There's nothing to bid on."]
+        ["I feel so worthless.", "There's nothing to bid on."],
+        ["I am empty inside. There is nothing to bid on."],
+        ["If a tree falls in the woods and nobody is there to hear it...", "Ah, whatever. I got nothing."],
+        ["I hate to break it to you, but no one has anything up for bid."],
+        ["This sucks. There's nothing available."],
+        ["Are you ready?", "For disappointment?", "Because there's nothing up for bid."],
     ],
 
 
@@ -119,7 +126,7 @@ The ${item.type} ends ${item.deadline}. Act fast! DM me if you want to bid.`;
         [(item) => `<@${item.sellerId}>'s raffle for _${item.name}_ is over and <@${item.winner.buyerId}> won! Winner winner :chicken: dinner.`],
     ],
     "raffleLost": [
-        [(item) => `<@${item.sellerId}>'s raffle for _${item.name}_ is done, but nobody wanted it. :cricket:`],
+        [(item) => `<@${item.sellerId}>'s raffle for _${item.name}_ is done, but nobody wanted it. :crickets:`],
     ],
     "auctionWon": [
         [(item) => `<@${item.sellerId}>'s raffle for _${item.name}_ is over and <@${item.winner.buyerId}> won with a bid of \$${item.winner.price}. :dollar:`],

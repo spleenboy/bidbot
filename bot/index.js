@@ -103,7 +103,6 @@ module.exports = class Bot {
         })
         .spread((exchange, created) => {
             if (!exchange.wanting) {
-                this.say(msg.channel, "greeting");
                 this.getAction(exchange, msg);
             } else if (msg.isAbandoned()) {
                 exchange.destroy();
@@ -126,6 +125,8 @@ module.exports = class Bot {
             // Got a weird response. What?
             if (exchange.wanting) {
                 this.say(msg.channel, "confused");
+            } else {
+                this.say(msg.channel, "greeting");
             }
             this.say(msg.channel, "getAction");
             exchange.wanting = "getAction";
