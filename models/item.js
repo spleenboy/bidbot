@@ -34,9 +34,6 @@ const Schema = {
     active: {
         type: Sequelize.BOOLEAN,
     },
-    startsOn: {
-        type: Sequelize.DATE,
-    },
     endsOn: {
         type: Sequelize.DATE,
     },

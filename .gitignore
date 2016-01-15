@@ -1,3 +1,5 @@
 config/local.json
 node_modules
+data
 *.log
+*.vim

@@ -16,19 +16,12 @@ const Schema = {
     buyerId: {
         type: Sequelize.STRING,
     },
-    itemid: {
+    itemId: {
         type: Sequelize.UUID,
-        references: {
-            model: Item,
-            key: 'id',
-        }
     },
     price: {
         type: Sequelize.DECIMAL(10, 2),
     },
-    addedOn: {
-        type: Sequelize.DATE,
-    }
 };
 
 const Settings = {

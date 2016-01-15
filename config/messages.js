@@ -15,6 +15,9 @@ const Messages = {
         ["You talk funny."],
         ["Huh?"]
     ],
+    "abandoned": [
+        ["Whatever you're trying to do: I want none of it."],
+    ],
     "error": [
         [(err) => `Something just went horribly wrong. \`${err}\``],
     ],
@@ -26,11 +29,24 @@ const Messages = {
     "getBidItem": [
         ["What do you want to bid on?"]
     ],
-    "getBidAmount": [
-        ["How much do you want to bid?"]
+    "bidItemNotFound": [
+        ["I can't find what you're looking for. Please use the name of the item."]
+    ],
+    "bidItemFoundMany": [
+        ["I found more than one item with that name. Please be more specific."]
+    ],
+    "getBidPrice": [
+        [(item) => `How much do you want to bid on _${item.name}_?`]
+    ],
+    "bidReceived": [
+        [(bid) => `Awesome! I got your ${bid.price > 0 ? '$' + bid.price : ''} bid for _${bid.item.name}_`],
+    ],
+    "bidReceivedAlready": [
+        [(item) => `You've already bid on _${item.name}_.`, "It's a raffle. One bid per person.", "Cheater."],
+        [(item) => `You've already bid on _${item.name}_.`, ":poop::poop::poop:"],
     ],
     "bidTooLow": [
-        ["Cheapskate!", "That's below the current high bid."],
+        ["Cheapskate!", (bid) => `That's below the current high bid of \$${bid.price}.`],
     ],
     "itemsForBid": [
         ["Okay. Here are the things I know about"],
@@ -38,6 +54,7 @@ const Messages = {
     "noItemsForBid": [
         ["I feel so worthless.", "There's nothing to bid on."]
     ],
+
 
     // Auctions and raffles
     "getItemName": [

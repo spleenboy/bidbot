@@ -99,6 +99,9 @@ module.exports = class Bot {
             if (!exchange.wanting) {
                 this.say(msg.channel, "greeting");
                 this.getAction(exchange, msg);
+            } else if (msg.isAbandoned()) {
+                exchange.destroy();
+                this.say(msg.channel, "abandoned");
             } else {
                 this[exchange.wanting](exchange, msg);
             }
@@ -136,17 +139,24 @@ module.exports = class Bot {
                 exchange.destroy();
                 return;
             }
+
             this.say(msg.channel, "itemsForBid");
 
             const list = [];
             items.forEach((item) => {
                 const article = item.type === 'auction' ? 'an' : 'a';
-                const deadline = moment(item.endsOn).toNow();
+                const deadline = moment(item.endsOn).fromNow();
                 list.push(` - _${item.name}_ is ${article} ${item.type} that ends ${deadline}`);
             });
 
-            msg.channel.send(list.join("\n"));
-            this.say(msg.channel, "getBidItem", items);
+            setTimeout(() => {
+                msg.channel.send(list.join("\n"));
+            }, config.pause / 2);
+
+            setTimeout(() => {
+                this.say(msg.channel, "getBidItem", items);
+            }, config.pause);
+
             exchange.wanting = "getBidItem";
             exchange.save();
         });
@@ -154,7 +164,72 @@ module.exports = class Bot {
 
 
     getBidItem(exchange, msg) {
+        Models.Item.findAll({
+            where: {
+                name: {$like: msg.text},
+                active: true,
+            }
+        })
+        .then((items) => {
+            if (!items || items.length === 0) {
+                this.say(msg.channel, "bidItemNotFound");
+                this.startBidding(exchange, msg);
+            } else if (items.length > 1) {
+                this.say(msg.channel, "bidItemFoundMany");
+                this.startBidding(exchange, msg);
+            } else {
+                const item = items[0];
+                Models.Bid.findOrCreate({
+                    where: {
+                        buyerId: msg.user.id,
+                        itemId: item.id
+                    }
+                })
+                .spread((bid, created) => {
+                    if (item.type === "auction") {
+                        exchange.bidId = bid.id;
+                        exchange.wanting = "getBidPrice";
+                        exchange.save();
+                        this.say(msg.channel, "getBidPrice", item);
+                    } else if (created) {
+                        this.say(msg.channel, "bidReceived", bid);
+                        exchange.destroy();
+                    } else {
+                        this.say(msg.channel, "bidReceivedAlready", bid);
+                        exchange.destroy();
+                    }
+                });
+            }
+        });
+    }
 
+
+    getBidPrice(exchange, msg) {
+        const amount = msg.getPrice();
+
+        this.getFullBid(exchange.bidId)
+        .then((myBid) => {
+            if (amount === false) {
+                this.say(msg.channel, "confused");
+                this.say(msg.channel, "getBidPrice", myBid.item);
+                return;
+            }
+
+            // Find the high bid
+            this.getHighBid(myBid.item.id)
+            .then((highBid) => {
+                if (highBid && highBid.price > amount) {
+                    this.say(msg.channel, "bidTooLow", highBid);
+                    this.say(msg.channel, "getBidPrice", myBid.item);
+                    return;
+                } else {
+                    myBid.price = amount;
+                    myBid.save();
+                    this.say(msg.channel, "bidReceived", myBid);
+                    exchange.destroy();
+                }
+            });
+        });
     }
 
 
@@ -251,9 +326,12 @@ module.exports = class Bot {
             if (msg.hasConfirmation()) {
                 this.say(item.channel, "itemPost", item);
                 this.say(msg.channel, "itemSaleConfirmed", item);
+                item.active = true;
+                item.save();
                 exchange.destroy();
             } else if (msg.hasDenial()) {
                 this.say(msg.channel, "itemSaleCanceled", item);
+                item.destroy();
                 exchange.destroy();
             } else {
                 this.say(msg.channel, "confused");
@@ -266,10 +344,33 @@ module.exports = class Bot {
     getFullItem(id) {
         return Models.Item.findById(id)
         .then((item) => {
+            if (!item) {
+                return null;
+            }
             if (item.channelId) item.channel = this.slack.getChannelGroupOrDMByID(item.channelId);
             if (item.sellerId) item.seller = this.slack.getUserByID(item.sellerId);
             if (item.endsOn) item.deadline = moment(item.endsOn).fromNow();
             return item;
+        });
+    }
+
+
+    getFullBid(id) {
+        return Models.Bid.findById(id)
+        .then((bid) => {
+            return this.getFullItem(bid.itemId)
+            .then((item) => {
+                bid.item = item;
+                return bid;
+            });
+        });
+    }
+
+
+    getHighBid(itemId) {
+        return Models.Bid.findOne({
+            where: {itemId: itemId},
+            order: 'price DESC',
         });
     }
 }

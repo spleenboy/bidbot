@@ -32,6 +32,11 @@ module.exports = class SlackMessage {
     }
 
 
+    isAbandoned() {
+        return /^(nm|nevermind|cancel)$/i.test(this.text);
+    }
+
+
     getPrice() {
         if (this.hasAnyWord(['free', 'nothing'])) {
             return 0;
