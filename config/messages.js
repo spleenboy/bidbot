@@ -107,16 +107,16 @@ The ${item.type} ends ${item.deadline}. Act fast! DM if you want to bid.`;
 
     // Winners
     "raffleWon": [
-        [(item) => `@{$item.seller.name}'s raffle for _${item.name}_ is over and @${item.winner.user.name} won!`],
+        [(item) => `@${item.seller.name}'s raffle for _${item.name}_ is over and @${item.winner.buyer.name} won! Winner winner :chicken: dinner.`],
     ],
     "raffleLost": [
-        [(item) => `@{$item.seller.name}'s raffle for _${item.name}_ is done, but nobody wanted it. :cricket:`],
+        [(item) => `@${item.seller.name}'s raffle for _${item.name}_ is done, but nobody wanted it. :cricket:`],
     ],
     "auctionWon": [
-        [(item) => `@{$item.seller.name}'s raffle for _${item.name}_ is over and @${item.winner.user.name} won with a bid of \$${item.winner.price}. :dollar:`],
+        [(item) => `@${item.seller.name}'s raffle for _${item.name}_ is over and @${item.winner.buyer.name} won with a bid of \$${item.winner.price}. :dollar:`],
     ],
     "auctionLost": [
-        [(item) => `@{$item.seller.name}'s auction for _${item.name}_ is done, but nobody wanted it. :cry:`],
+        [(item) => `@${item.seller.name}'s auction for _${item.name}_ is done, but nobody wanted it. :cry:`],
     ],
 };
 

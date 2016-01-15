@@ -403,6 +403,7 @@ module.exports = class Bot {
         }
 
         item.winner = bid;
+        console.info("Winner winner", item);
         let state = bid ? item.type + "Won" : item.type + "Lost";
         this.say(item.channel, state, item);
     }
