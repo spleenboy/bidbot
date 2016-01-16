@@ -4,6 +4,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const config = require('../config/local.json');
 const messages = require('../config/messages');
+const Trickle = require('../util/trickle');
 const logger = require('./logger');
 
 const Models = require('../models');
@@ -18,6 +19,8 @@ module.exports = class Bot {
                 this.connect(slack);
             }
         });
+        this.trickle = new Trickle();
+        this.trickle.delay = config.pause;
     }
 
 
@@ -59,8 +62,12 @@ module.exports = class Bot {
 
 
     // Sends one or messages to the channel.
+    // Queues up the messages to seem creepily human.
     say(channel, key, ctx) {
-        function send(msg) {
+
+        const self = this;
+
+        function queue(msg) {
             if (_.isFunction(msg)) {
                 msg = msg(ctx || channel);
             }
@@ -68,28 +75,24 @@ module.exports = class Bot {
                 logger.error("No value for key", key, msg);
                 return;
             }
-            channel.send(msg);
+            self.trickle.add(channel.send.bind(channel, msg));
         }
 
         const value = messages[key];
 
         if (!_.isArray(value)) {
-            send(value);
+            queue(value);
             return value;
         }
 
         const chosen = _.sample(value);
 
         if (!_.isArray(chosen)) {
-            send(chosen);
+            queue(chosen);
             return chosen;
         }
 
-        let delay = 0;
-        chosen.forEach(msg => {
-            setTimeout(send.bind(this, msg), delay);
-            delay += config.pause;
-        });
+        chosen.forEach(queue);
         return chosen.join("\n");
     }
 

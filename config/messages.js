@@ -16,6 +16,7 @@ const Messages = {
     ],
     "confused": [
         ["I don't get you."],
+        ["You", "are", "silly"],
         ["You talk funny."],
         ["Huh?"],
         ["I think you're intentionally trying to confuse me."],
