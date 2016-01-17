@@ -101,11 +101,10 @@ const Messages = {
         [(item) => {
             const what = item.type === 'auction' ? 'an auction' : 'a raffle';
             return `Here's basically what I want to post\n
-> @${item.seller.name} is holding ${what} for *${item.name}*\n
-> ${item.description}\n
-> The ${item.type} ends ${item.deadline}.\n
-Should I do it?`;
-        }]
+>>> @${item.seller.name} is holding ${what} for *${item.name}*\n
+${item.description}\n
+The ${item.type} ends ${item.deadline}.`
+        }, "Should I do it?"]
     ],
     "itemSaleConfirmed": [
         ["It's up!"]
