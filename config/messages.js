@@ -13,6 +13,7 @@ const Messages = {
         ["Sure."],
         ["Sounds good."],
         [":moneybag:"],
+        ["Fine"],
     ],
     "confused": [
         ["I don't get you."],

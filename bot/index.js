@@ -6,6 +6,7 @@ const config = require('../config/local.json');
 const messages = require('../config/messages');
 const Trickle = require('../util/trickle');
 const logger = require('./logger');
+const Incoming = require('./incoming');
 
 const Models = require('../models');
 const Winners = require('./winners');
@@ -53,7 +54,7 @@ module.exports = class Bot {
 
 
     message(original) {
-        const msg = new Models.SlackMessage(original, this.slack);
+        const msg = new Incoming(original, this.slack);
 
         if (msg.isIM()) {
             return this.handleIM(msg);
@@ -141,7 +142,7 @@ module.exports = class Bot {
     startBidding(exchange, msg) {
         Models.Item.findAll({
             where: {active: true},
-            order: 'endsOn DESC',
+            order: 'endsOn',
         })
         .then((items) => {
             if (!items || items.length === 0) {
@@ -153,19 +154,14 @@ module.exports = class Bot {
             this.say(msg.channel, "itemsForBid");
 
             const list = [];
-            items.forEach((item) => {
+            items.forEach((item, i) => {
                 const article = item.type === 'auction' ? 'an' : 'a';
                 const deadline = moment(item.endsOn).fromNow();
-                list.push(` - _${item.name}_ is ${article} ${item.type} that ends ${deadline}`);
+                list.push(` • *${item.abbr}*: _${item.name}_ is ${article} ${item.type} that ends ${deadline}`);
             });
 
-            setTimeout(() => {
-                msg.channel.send(list.join("\n"));
-            }, config.pause / 2);
-
-            setTimeout(() => {
-                this.say(msg.channel, "getBidItem", items);
-            }, config.pause);
+            this.trickle.add(msg.channel.send.bind(msg.channel, list.join("\n")));
+            this.say(msg.channel, "getBidItem", items);
 
             exchange.wanting = "getBidItem";
             exchange.save();
@@ -176,7 +172,7 @@ module.exports = class Bot {
     getBidItem(exchange, msg) {
         Models.Item.findAll({
             where: {
-                name: {$like: msg.text},
+                abbr: {$like: msg.text},
                 active: true,
             }
         })
@@ -312,7 +308,10 @@ module.exports = class Bot {
         const endsOn = msg.getDate();
         if (endsOn === false) {
             this.say(msg.channel, "confused");
-            this.say(msg.channel, "getItemEndsOn");
+            this.getFullItem(exchange.itemId)
+            .then((item) => {
+                this.say(msg.channel, "getItemEndsOn", item);
+            });
             return;
         }
         this.getItemFieldValue(exchange, msg, "endsOn", endsOn, "getItemChannel");

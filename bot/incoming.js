@@ -2,7 +2,7 @@
 
 const moment = require('moment');
 
-module.exports = class SlackMessage {
+module.exports = class Incoming {
     constructor(message, slack) {
         Object.assign(this, message);
         this.channel = slack.getChannelGroupOrDMByID(message.channel);
@@ -51,14 +51,16 @@ module.exports = class SlackMessage {
         const check = /((\d+) (second|minute|min|hour|day)s?)/gi;
         let date = moment();
         let matches = null;
+        let any = false;
         while ((matches = check.exec(this.text)) !== null) {
             let number = parseInt(matches[2]);
             let unit = matches[3] + 's';
             if (!isNaN(number) && number > 0) {
                 date.add(number, unit);
+                any = true;
             }
         }
-        return date.toDate();
+        return any ? date.toDate() : false;
     }
 
 

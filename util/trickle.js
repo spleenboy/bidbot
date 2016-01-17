@@ -1,5 +1,6 @@
 "use strict";
 
+// Queues up actions to be exectued in FIFO order with a delay
 class Trickle {
     constructor() {
         this.queue = [];

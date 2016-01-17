@@ -3,6 +3,7 @@
 const Sequelize = require('sequelize');
 const connection = require('./connection');
 const Bid = require('./bid');
+const Abbr = require('../util/abbr');
 
 const Name = 'item';
 
@@ -12,6 +13,9 @@ const Schema = {
         defaultValue: Sequelize.UUIDV4,
         unique: true,
         primaryKey: true,
+    },
+    abbr: {
+        type: Sequelize.STRING,
     },
     channelId: {
         type: Sequelize.STRING,
@@ -24,6 +28,12 @@ const Schema = {
     },
     name: {
         type: Sequelize.STRING,
+        set: function(val) {
+            this.setDataValue('name', val);
+
+            const abbr = new Abbr(val);
+            this.setDataValue('abbr', abbr.value);
+        }
     },
     description: {
         type: Sequelize.STRING,

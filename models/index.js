@@ -10,7 +10,6 @@ module.exports = {
     Item: require('./item'),
     Bid: require('./bid'),
     Exchange: require('./exchange'),
-    SlackMessage: require('./slack-message'),
 
     sync() {
         return connection.sync();
