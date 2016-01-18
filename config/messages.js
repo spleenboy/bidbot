@@ -60,7 +60,7 @@ const Messages = {
         [(bid) => `You've already bid on _${bid.item.name}_.`, ":poop::poop::poop:"],
     ],
     "bidTooLow": [
-        ["Cheapskate!", (bid) => `That's below the current high bid of \$${bid.price}.`],
+        ["Cheapskate!", (item) => `That's below the current high bid of \$${item.highBid}.`],
     ],
     "itemsForBid": [
         ["Okay. Here are the things I know about"],

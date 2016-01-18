@@ -155,9 +155,12 @@ module.exports = class Bot {
 
             const list = [];
             items.forEach((item, i) => {
-                const article = item.type === 'auction' ? 'an' : 'a';
                 const deadline = moment(item.endsOn).fromNow();
-                list.push(` • *${item.abbr}*: _${item.name}_ is ${article} ${item.type} that ends ${deadline}`);
+                if (item.type === 'auction') {
+                    list.push(` • *${item.abbr}*: _${item.name}_ is an auction ending ${deadline}. Current high bid is \$${item.highBid}`);
+                } else {
+                    list.push(` • *${item.abbr}*: _${item.name}_ is a raffle ending ${deadline}`);
+                }
             });
 
             this.trickle.add(msg.channel.send.bind(msg.channel, list.join("\n")));
@@ -222,20 +225,21 @@ module.exports = class Bot {
                 return;
             }
 
-            // Find the high bid
-            this.getHighBid(myBid.item.id)
-            .then((highBid) => {
-                if (highBid && highBid.price > amount) {
-                    this.say(msg.channel, "bidTooLow", highBid);
-                    this.say(msg.channel, "getBidPrice", myBid.item);
-                    return;
-                } else {
-                    myBid.price = amount;
-                    myBid.save();
-                    this.say(msg.channel, "bidReceived", myBid);
-                    exchange.destroy();
-                }
-            });
+            const item = myBid.item;
+            if (item.highBid > amount) {
+                this.say(msg.channel, "bidTooLow", myBid.item);
+                this.say(msg.channel, "getBidPrice", myBid.item);
+                return;
+            } else {
+                item.highBid = amount;
+                item.save();
+
+                myBid.price = amount;
+                myBid.save();
+
+                this.say(msg.channel, "bidReceived", myBid);
+                exchange.destroy();
+            }
         });
     }
 
