@@ -1,3 +1,5 @@
+"use strict";
+
 const Messages = {
     "greeting": [
         ["Hello!"],
@@ -17,13 +19,13 @@ const Messages = {
     ],
     "confused": [
         ["I don't get you."],
-        ["You", "are", "silly"],
+        ["You", "are", "silly. :stuck_out_tongue:"],
         ["You talk funny."],
         ["Huh?"],
         ["I think you're intentionally trying to confuse me."],
         ["Whatchutalkinbout?"],
         ["You think you're better than me?"],
-        ["Beep. Boop. Beep", "Does not compute."],
+        ["Beep. Boop. Beep", "Does not compute. :computer:"],
     ],
     "abandoned": [
         ["Whatever you're trying to do: I want none of it."],
@@ -100,9 +102,17 @@ const Messages = {
     "confirmItemSale": [
         [(item) => {
             const what = item.type === 'auction' ? 'an auction' : 'a raffle';
+
+            let price = "";
+            if (item.price) {
+                price = item.type === 'auction'
+                        ? ` Starting bid is *\$${item.price}*.\n`
+                        : ` Price is *\$${item.price}*.\n`;
+            }
             return `Here's basically what I want to post\n
 >>> @${item.seller.name} is holding ${what} for *${item.name}*\n
 ${item.description}\n
+${price}
 The ${item.type} ends ${item.deadline}.`
         }, "Should I do it?"]
     ],

@@ -4,7 +4,13 @@
     "logger": {
         "name": "bidbot",
         "streams": [
-            {"path": "./data/bidbot.log"}
+        "streams": [
+            {
+                "path": "./data/bidbot.log",
+                "type": "rotating-file",
+                "period": "1w",
+                "count": 4
+            }
         ]
     },
     "database": {

@@ -5,7 +5,7 @@ const moment = require('moment');
 const config = require('../config/local.json');
 const messages = require('../config/messages');
 const Trickle = require('../util/trickle');
-const logger = require('./logger');
+const logger = require('../util/logger');
 const Incoming = require('./incoming');
 
 const Models = require('../models');
@@ -157,7 +157,8 @@ module.exports = class Bot {
             items.forEach((item, i) => {
                 const deadline = moment(item.endsOn).fromNow();
                 if (item.type === 'auction') {
-                    list.push(` • *${item.abbr}*: _${item.name}_ is an auction ending ${deadline}. Current high bid is \$${item.highBid}`);
+                    const highbid = item.highBid ? ` Current high bid is \$${item.highBid}.` : `Starting bid is \$${item.price}.`;
+                    list.push(` • *${item.abbr}*: _${item.name}_ is an auction ending ${deadline}.${highbid}`);
                 } else {
                     list.push(` • *${item.abbr}*: _${item.name}_ is a raffle ending ${deadline}`);
                 }
@@ -226,7 +227,7 @@ module.exports = class Bot {
             }
 
             const item = myBid.item;
-            if (item.highBid > amount) {
+            if (item.price > amount || item.highBid >= amount) {
                 this.say(msg.channel, "bidTooLow", myBid.item);
                 this.say(msg.channel, "getBidPrice", myBid.item);
                 return;

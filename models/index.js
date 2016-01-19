@@ -1,7 +1,7 @@
 "use strict";
 
 const connection = require('./connection');
-const logger = require('../bot/logger');
+const logger = require('../util/logger');
 
 module.exports = {
     connection: connection,

@@ -3,7 +3,7 @@
 const EventEmitter = require('events');
 const _ = require('lodash');
 const Models = require('../models');
-const logger = require('./logger');
+const logger = require('../util/logger');
 const INTERVAL_MS = 1000;
 
 // This module enforces the deadlines of auctions and raffles
