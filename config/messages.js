@@ -1,5 +1,7 @@
 "use strict";
 
+const moment = require('moment');
+
 const Messages = {
     "greeting": [
         ["Hello!"],
@@ -75,8 +77,8 @@ const Messages = {
                 } else {
                     list.push(` • *${item.abbr}*: _${item.name}_ is a raffle ending ${deadline}`);
                 }
-                return list.join("\n");
             });
+            return list.join("\n");
         }],
     ],
     "noItemsForBid": [
