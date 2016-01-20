@@ -65,7 +65,19 @@ const Messages = {
         ["Cheapskate!", (item) => `That's below the current high bid of \$${item.highBid}.`],
     ],
     "itemsForBid": [
-        ["Okay. Here are the things I know about"],
+        ["Okay. Here are the things I know about", (items) => {
+            const list = [];
+            items.forEach((item, i) => {
+                const deadline = moment(item.endsOn).fromNow();
+                if (item.type === 'auction') {
+                    const highbid = item.highBid ? ` Current high bid is \$${item.highBid}.` : `Starting bid is \$${item.price}.`;
+                    list.push(` • *${item.abbr}*: _${item.name}_ is an auction ending ${deadline}.${highbid}`);
+                } else {
+                    list.push(` • *${item.abbr}*: _${item.name}_ is a raffle ending ${deadline}`);
+                }
+                return list.join("\n");
+            });
+        }],
     ],
     "noItemsForBid": [
         ["I feel so worthless.", "There's nothing to bid on."],

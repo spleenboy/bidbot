@@ -151,20 +151,7 @@ module.exports = class Bot {
                 return;
             }
 
-            this.say(msg.channel, "itemsForBid");
-
-            const list = [];
-            items.forEach((item, i) => {
-                const deadline = moment(item.endsOn).fromNow();
-                if (item.type === 'auction') {
-                    const highbid = item.highBid ? ` Current high bid is \$${item.highBid}.` : `Starting bid is \$${item.price}.`;
-                    list.push(` • *${item.abbr}*: _${item.name}_ is an auction ending ${deadline}.${highbid}`);
-                } else {
-                    list.push(` • *${item.abbr}*: _${item.name}_ is a raffle ending ${deadline}`);
-                }
-            });
-
-            this.trickle.add(msg.channel.send.bind(msg.channel, list.join("\n")));
+            this.say(msg.channel, "itemsForBid", items);
             this.say(msg.channel, "getBidItem", items);
 
             exchange.wanting = "getBidItem";

@@ -8,10 +8,6 @@ module.exports = class Incoming {
         this.channel = slack.getChannelGroupOrDMByID(message.channel);
         this.user = slack.getUserByID(message.user);
         this.slack = slack;
-
-        this.intent = null;
-        this.subject = null;
-        this.object = null;
     }
 
 
