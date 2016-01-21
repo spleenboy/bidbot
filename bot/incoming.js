@@ -29,7 +29,7 @@ module.exports = class Incoming {
 
 
     isAbandoned() {
-        return /^(nm|nevermind|cancel)$/i.test(this.text);
+        return /^(nm|nevermind|never mind|cancel|nothing)$/i.test(this.text);
     }
 
 

@@ -48,10 +48,10 @@ const Messages = {
         ["What do you want to bid on?"]
     ],
     "bidItemNotFound": [
-        ["I can't find what you're looking for. Please use the name of the item."]
+        ["I can't find what you're looking for. Please use the `ID` I made up for the item."]
     ],
     "bidItemFoundMany": [
-        ["I found more than one item with that name. Please be more specific."]
+        ["I found more than one item with that id. What are the odds?"]
     ],
     "getBidPrice": [
         [(item) => `How much do you want to bid on _${item.name}_?`]
@@ -67,15 +67,16 @@ const Messages = {
         ["Cheapskate!", (item) => `That's below the current high bid of \$${item.highBid}.`],
     ],
     "itemsForBid": [
-        ["Okay. Here are the things I know about", (items) => {
+        ["Here are the things I know about", (items) => {
             const list = [];
             items.forEach((item, i) => {
                 const deadline = moment(item.endsOn).fromNow();
                 if (item.type === 'auction') {
                     const highbid = item.highBid ? ` Current high bid is \$${item.highBid}.` : `Starting bid is \$${item.price}.`;
-                    list.push(` • *${item.abbr}*: _${item.name}_ is an auction ending ${deadline}.${highbid}`);
+                    list.push(` • \`${item.abbr}\`: _${item.name}_ is an auction ending ${deadline}.${highbid}`);
                 } else {
-                    list.push(` • *${item.abbr}*: _${item.name}_ is a raffle ending ${deadline}`);
+                    const price = item.price ? ` Price: *\$${item.price}*.` : ` *FREE!*`;
+                    list.push(` • \`${item.abbr}\`: _${item.name}_ is a raffle ending ${deadline}. ${price}`);
                 }
             });
             return list.join("\n");
