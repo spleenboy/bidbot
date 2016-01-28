@@ -2,15 +2,15 @@
 
 const _ = require('lodash');
 const moment = require('moment');
+const Talker = require('slackversational');
+
 const config = require('../config/local.json');
 const messages = require('../config/messages');
 const logger = require('../util/logger');
+const conversation = require('./conversation');
 
 const Models = require('../models');
 const Winners = require('./winners');
-const Requests = require('./requests/');
-
-const Talker = require('slackversational');
 
 module.exports = class Bot {
     constructor(slack) {
@@ -31,37 +31,15 @@ module.exports = class Bot {
 
         const dispatcher = new Talker.Dispatcher(slack);
 
-        dispatcher.exclude = (message) => {
-            return !message.channel.is_im;
-        };
+        dispatcher.exclude = (message) => !message.channel.is_im;
+        dispatcher.on('start', conversation.load);
 
-        dispatcher.on('start', (conversation, msg) => {
-            Models.Exchange.findOrCreate({
-                where: {
-                    userId: msg.input.user,
-                    channelId: msg.input.channel,
-                }
-            }).then((exchange) => {
-
-                const getAction = new Requests.GetAction();
-                getAction.on('valid', (response) => {
-                    const action = response.value;
-                    const rqid = "start-" + action;
-                    conversation.setRequest((rq) => rq.id === rqid);
-                });
-                conversation.addRequest(getAction);
+        slack.login();
+    }
 
 
-                if (exchange.wanting) {
-                    conversation.setRequest(rq => rq.name === exchange.wanting);
-                }
-
-                conversation.on('end', () => exchange.destroy());
-                conversation.process(msg);
-            });
-        });
-
-        dispatcher.listen(slack);
+    error(err, text) {
+        logger.error(text || 'Slack error', err);
     }
 
 
@@ -73,7 +51,9 @@ module.exports = class Bot {
     }
 
 
-    error(err, text) {
-        logger.error(text || 'Slack error', err);
+    bidWon(item, bid) {
+        item.winner = bid;
+        logger.info("Winner winner", item);
+        let state = bid ? item.type + "Won" : item.type + "Lost";
     }
 }

@@ -1,28 +1,17 @@
 "use strict";
 
-const Parser = require('slackversational/parsers/parser');
+const Parser = require('slackversational').Parsers.Parser;
 
 module.exports = class Action extends Parser {
 
-    static get AUCTION {
-        return "auction";
-    }
-
-    static get RAFFLE {
-        return "raffle";
-    }
-
-    static get BID {
-        return "bid";
-    }
-
     parse(value) {
-        if (msg.hasWord("auction")) {
-            return this.AUCTION;
-        } else if (msg.hasWord("raffle")) {
-            return this.RAFFLE;
-        } else if (msg.hasAnyWord(['bid', 'buy', 'offer', 'list'])) {
-            return this.BID;
+        console.log(value);
+        if (this.hasWord(value, "auction")) {
+            return "auction";
+        } else if (this.hasWord(value, "raffle")) {
+            return "raffle";
+        } else if (this.hasAnyWord(value, ['bid', 'buy', 'offer', 'list'])) {
+            return "bid";
         }
         return null;
     }

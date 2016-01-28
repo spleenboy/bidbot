@@ -1,10 +1,11 @@
 "use strict";
 
-const Validator = require('slackversational/validators/validator');
+const Validator = require('slackversational').Validators.Validator;
 
 module.exports = class Confused extends Validator {
     constructor(messages) {
-        this.messages = messages || [
+        super(messages);
+        this.messages = this.messages || [
             ["I don't get you."],
             ["You", "are", "silly. :stuck_out_tongue:"],
             ["You talk funny."],

@@ -1,6 +1,6 @@
 "use strict";
 
-const Parser = require('slackversational/parsers/parser');
+const Parser = require('slackversational').Parsers.Parser;
 const Models = require('../../models');
 
 module.exports = class ItemsByAbbr extends Parser {
