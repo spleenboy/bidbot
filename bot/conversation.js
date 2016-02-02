@@ -5,7 +5,6 @@ const Models = require('../models');
 const Requests = require('./requests/');
 const log = require('../util/logger.js');
 
-// An override the the dispatcher create method
 module.exports.load = function(conversation, exchange) {
     const getAction = new Requests.GetAction();
     conversation.addRequest(getAction);
@@ -16,38 +15,47 @@ module.exports.load = function(conversation, exchange) {
     const getBidAmount = new Requests.GetBidAmount();
     conversation.addRequest(getBidAmount);
 
+    const getRaffleItem = new Requests.GetRaffleItem();
+    conversation.addRequest(getRaffleItem);
+
+    const getAuctionItem = new Requests.GetAuctionItem();
+    conversation.addRequest(getAuctionItem);
+
+    const getSaleDescription = new Requests.GetSaleDescription();
+    conversation.addRequest(getSaleDescription);
+
 
     getAction.on('valid', (x) => {
         let action = null;
-        switch (x.value) {
-            case 'auction':
-            case 'raffle':
-                break;
-            case 'bid':
-                action = getBidItem;
+        if (x.value === 'bid') {
+            action = getBidItem;
+        } else if (x.value === 'raffle') {
+            action = getRaffleItem;
+        } else if (x.value === 'auction') {
+            action = getAuctionItem;
         }
-        conversation.setRequest((rq) => rq === action);
-    });
-    getAction.on('invalid', (x) => {
-        log.debug('invalid', x);
+
+        action && conversation.setRequest((rq) => rq === action);
     });
 
 
     getBidItem.on('valid', (x) => {
-        conversation.item = x.item;
-        conversation.bid = x.bid;
-        if (item.type === "auction") {
-            conversation.setRequest((rq) => rq.id === "get-bid-amount");
+        if (x.item.type === "auction") {
+            conversation.setRequest((rq) => rq === getBidAmount);
         } else {
             conversation.end();
         }
     });
 
 
-    getBidAmount.on('processing', (request, x) => {
-        x.item = conversation.item;
-        x.bid = conversation.bid;
+    getRaffleItem.on('valid', (x) => {
+        conversation.setRequest((rq) => rq === getSaleDescription);
     });
+
+    getAuctionItem.on('valid', (x) => {
+        conversation.setRequest((rq) => rq === getSaleDescription);
+    });
+
 
     log.debug("Loaded conversation for exchange", exchange.input.text);
 }

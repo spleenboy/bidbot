@@ -41,6 +41,9 @@ const Schema = {
     price: {
         type: Sequelize.DECIMAL(10, 2),
     },
+    quantity: {
+        type: Sequelize.INTEGER,
+    },
     highBid: {
         type: Sequelize.DECIMAL(10, 2),
     },

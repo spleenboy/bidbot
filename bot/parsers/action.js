@@ -5,8 +5,7 @@ const Parser = require('slackversational').Parsers.Parser;
 module.exports = class Action extends Parser {
 
     parse(value) {
-        console.log(value);
-        if (this.hasWord(value, "auction")) {
+        if (this.hasWord(value, "auction", "sell")) {
             return "auction";
         } else if (this.hasWord(value, "raffle")) {
             return "raffle";

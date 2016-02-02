@@ -48,8 +48,8 @@ module.exports = class GetBidItem extends Talker.Request {
                 itemId: item.id,
             }
         }).spread((bid, created) => {
-            exchange.item = item;
-            exchange.bid = bid;
+            exchange.topic.item = item;
+            exchange.topic.bid = bid;
             if (item.type === "auction") {
                 // Let the conversation move to getting bid amount
                 return;

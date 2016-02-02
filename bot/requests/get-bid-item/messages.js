@@ -11,11 +11,11 @@ module.exports = {
         ["I found more than one item with that id. What are the odds?"]
     ],
     "bidReceived": [
-        [(x) => `Awesome! I got your bid for _${x.bid.item.name}_`],
+        [(x) => `Awesome! I got your bid for _${x.topic.item.name}_`],
     ],
     "bidReceivedAlready": [
-        [(x) => `You've already bid on _${x.bid.item.name}_.`, "It's a raffle. One bid per person.", "Cheater."],
-        [(x) => `You've already bid on _${x.bid.item.name}_.`, ":poop::poop::poop:"],
+        [(x) => `You've already bid on _${x.topic.item.name}_.`, "It's a raffle. One bid per person.", "Cheater."],
+        [(x) => `You've already bid on _${x.topic.item.name}_.`, ":poop::poop::poop:"],
     ],
     "itemsForBid": [
         ["Here are the things I know about", (x) => {

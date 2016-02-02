@@ -39,8 +39,8 @@ module.exports = class GetBidAmount extends Talker.Request {
         .then(() => {
             this.validateBidAmount(exchange)
             if (exchange.valid) {
-                exchange.bid.price = exchange.value;
-                exchange.bid.save();
+                exchange.topic.bid.price = exchange.value;
+                exchange.topic.bid.save();
                 exchange.ended = true;
             }
         });

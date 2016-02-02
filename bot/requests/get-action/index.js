@@ -22,7 +22,6 @@ module.exports = class GetAction extends Talker.Request {
         const parseAction = new ParseAction();
         parseAction.apply(exchange)
         .then(() => {
-            console.log("Checked action", exchange.value, exchange.valid);
             if (exchange.value) {
                 exchange.valid = true;
                 return super.handleResponding(exchange);
