@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require('lodash');
 const Talker = require('slackversational');
 const Models = require('../models');
 const Requests = require('./requests/');
@@ -24,38 +25,63 @@ module.exports.load = function(conversation, exchange) {
     const getSaleDescription = new Requests.GetSaleDescription();
     conversation.addRequest(getSaleDescription);
 
+    const getSaleDeadline = new Requests.GetSaleDeadline();
+    conversation.addRequest(getSaleDeadline);
 
+
+    function setRequest(action) {
+        action && conversation.setRequest((rq) => rq === action);
+    }
+
+
+    // Chains together multiple actions to be called
+    // in succession on valid exchanges.
+    function chain() {
+        const args = _.toArray(arguments);
+        let current = args.shift();
+        while (current) {
+            const next = args.shift();
+            if (next) {
+                console.log('chained', current.id, 'to', next.id);
+                current.on('valid', setRequest.bind(conversation, next));
+            }
+            current = next;
+        }
+    }
+
+
+    // Handle the initial action
     getAction.on('valid', (x) => {
         let action = null;
         if (x.value === 'bid') {
-            action = getBidItem;
+            setRequest(getBidItem);
         } else if (x.value === 'raffle') {
-            action = getRaffleItem;
+            setRequest(getRaffleItem);
         } else if (x.value === 'auction') {
-            action = getAuctionItem;
-        }
-
-        action && conversation.setRequest((rq) => rq === action);
-    });
-
-
-    getBidItem.on('valid', (x) => {
-        if (x.item.type === "auction") {
-            conversation.setRequest((rq) => rq === getBidAmount);
+            setRequest(getAuctionItem);
         } else {
             conversation.end();
         }
     });
 
 
-    getRaffleItem.on('valid', (x) => {
-        conversation.setRequest((rq) => rq === getSaleDescription);
+    // Handle raffles and auctions.
+    chain(getRaffleItem, getSaleDescription, getSaleDeadline);
+    chain(getAuctionItem, getSaleDescription, getSaleDeadline);
+
+
+    getBidItem.on('valid', (x) => {
+        if (x.item.type === "auction") {
+            setRequest(getBidAmount);
+        } else {
+            conversation.end();
+        }
     });
 
-    getAuctionItem.on('valid', (x) => {
-        conversation.setRequest((rq) => rq === getSaleDescription);
-    });
 
+    getBidAmount.on('valid', (x) => {
+        conversation.end();
+    });
 
     log.debug("Loaded conversation for exchange", exchange.input.text);
 }

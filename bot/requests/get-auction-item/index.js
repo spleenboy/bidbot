@@ -8,8 +8,8 @@ module.exports = class GetAuctionItem extends Talker.Request {
     constructor(id) {
         super(id);
         this.id = "get-auction-item";
-        this.questions = Messages.getAuctionItem;
-        this.responses = Messages.gotAuctiontem;
+        this.questions = Messages.getItemName;
+        this.responses = Messages.gotItemName;
     }
 
 

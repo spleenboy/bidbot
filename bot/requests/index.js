@@ -7,4 +7,5 @@ module.exports = {
     GetRaffleItem: require('./get-raffle-item'),
     GetAuctionItem: require('./get-auction-item'),
     GetSaleDescription: require('./get-sale-description'),
+    GetSaleDeadline: require('./get-sale-deadline'),
 };
