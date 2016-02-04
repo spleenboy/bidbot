@@ -22,6 +22,9 @@ const Schema = {
     price: {
         type: Sequelize.DECIMAL(10, 2),
     },
+    winner: {
+        type: Sequelize.BOOLEAN,
+    }
 };
 
 const Settings = {

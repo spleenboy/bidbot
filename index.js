@@ -6,5 +6,3 @@ const Bot = require('./bot');
 
 const slack = new Slack(config.slackToken, true, true);
 const bot = new Bot(slack);
-
-slack.login();

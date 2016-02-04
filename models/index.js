@@ -9,7 +9,6 @@ module.exports = {
     Sequelize: require('sequelize'),
     Item: require('./item'),
     Bid: require('./bid'),
-    Exchange: require('./exchange'),
 
     sync() {
         return connection.sync();

@@ -4,7 +4,7 @@
   "description": "Arbiter of auctions and raffles",
   "main": "index.js",
   "scripts": {
-    "start": "node . --harmony --strict",
+    "start": "node . --harmony --strict | ./node_modules/.bin/bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +25,7 @@
   "dependencies": {
     "bunyan": "^1.5.1",
     "lodash": "^4.0.0",
+    "slackversational": "github:spleenboy/slackversational",
     "moment": "^2.11.1",
     "mysql": "^2.10.2",
     "sequelize": "^3.17.1",

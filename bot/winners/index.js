@@ -2,13 +2,20 @@
 
 const EventEmitter = require('events');
 const _ = require('lodash');
-const Models = require('../models');
-const logger = require('../util/logger');
+const Talker = require('slackversational');
+const Models = require('../../models');
+const logger = require('../../util/logger');
+const Messages = require('./messages');
 const INTERVAL_MS = 1000;
 
 // This module enforces the deadlines of auctions and raffles
 // Whenever an auction or raffle ends, an event is emitted
-module.exports = class Timer extends EventEmitter {
+module.exports = class Winners extends EventEmitter {
+    constructor(slack) {
+        super();
+        this.slack = slack;
+    }
+
     track() {
         this.ticker = setInterval(this.tick.bind(this), INTERVAL_MS);
         logger.info("Starting interval to track winners");
@@ -45,12 +52,17 @@ module.exports = class Timer extends EventEmitter {
             where: {itemId: item.id},
             order: 'price DESC',
         })
-        .then((winner) => {
-            item.winnerId = winner ? winner.id : null;
+        .then((bid) => {
             item.active = false;
             item.save();
 
-            return this.emit("won", item, winner);
+            if (bid) {
+                bid.winner = true;
+                bid.save();
+            }
+
+            this.announce(item, [bid]);
+            return this.emit("won", item, [bid]);
         });
     }
 
@@ -60,13 +72,29 @@ module.exports = class Timer extends EventEmitter {
             where: {itemId: item.id},
             order: [sq.fn("RANDOM")]
         })
-        .then((winner) => {
-            item.winnerId = winner ? winner.id : null;
+        .then((bids) => {
             item.active = false;
             item.save();
 
-            return this.emit("won", item, winner);
+            if (bids) {
+                bids.forEach(bid => {
+                    bid.winner = true;
+                    bid.save();
+                });
+            }
+
+            this.announce(item, bids);
+            return this.emit("won", item, bids);
         });
+    }
+
+    announce(item, bids) {
+        const ctx = {item, bids};
+        const statements = bids ? Messages.won : Messages.lost;
+        const pool = new Talker.StatementPool(statements);
+        const typist = new Talker.Typist(pool.bind(ctx));
+        const channel = this.slack.getChannelGroupOrDMByID(item.channelId);
+        typist.send(channel);
     }
 
     stop() {
