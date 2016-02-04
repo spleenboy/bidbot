@@ -4,6 +4,7 @@ const _ = require('lodash');
 const Talker = require('slackversational');
 const Models = require('../models');
 const Requests = require('./requests/');
+const Abandoned = require('./validators/abandoned');
 const log = require('../util/logger.js');
 
 module.exports.load = function(conversation, exchange) {
@@ -23,20 +24,27 @@ module.exports.load = function(conversation, exchange) {
     const getSaleChannel = new Requests.GetSaleChannel();
     const confirmSale = new Requests.ConfirmSale();
 
+    const abandoned = new Abandoned();
+
+    conversation.on('preparing', (rq, x) => {
+        abandoned.apply(x);
+    });
+
 
     function setRequest(action) {
         action && conversation.setRequest((rq) => rq === action);
     }
 
+    const actions = {
+        'bid': getBidItem,
+        'auction': getAuctionItem,
+        'raffle': getRaffleItem,
+    };
+
     // Handle the initial action
     getAction.on('valid', (x) => {
-        let action = null;
-        if (x.value === 'bid') {
-            setRequest(getBidItem);
-        } else if (x.value === 'raffle') {
-            setRequest(getRaffleItem);
-        } else if (x.value === 'auction') {
-            setRequest(getAuctionItem);
+        if (x.value in actions) {
+            setRequest(actions[x.value]);
         } else {
             conversation.end();
         }

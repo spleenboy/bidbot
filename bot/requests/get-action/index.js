@@ -12,13 +12,16 @@ module.exports = class GetAction extends Talker.Request {
         this.questions = Messages.getAction;
         this.processors = [
             new ParseAction(),
-            new Confused()
+            new Confused(),
         ];
         this.responses = [];
     }
 
 
     handleAsking(exchange) {
+        if (this.asked === 0) {
+            exchange.write(Messages.hello);
+        }
         const parseAction = new ParseAction();
         parseAction.apply(exchange)
         .then(() => {
