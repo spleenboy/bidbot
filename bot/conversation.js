@@ -47,7 +47,11 @@ module.exports.load = function(conversation, exchange) {
     conversation.chain(getRaffleItem, getSaleDescription, getSaleDeadline, getSaleChannel, confirmSale);
     conversation.chain(getAuctionItem, getSaleDescription, getSaleDeadline, getSaleChannel, confirmSale);
 
+    confirmSale.on('valid', (x) => {
+        conversation.end();
+    });
 
+    // Handle bidding
     getBidItem.on('valid', (x) => {
         if (x.item.type === "auction") {
             setRequest(getBidAmount);

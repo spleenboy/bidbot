@@ -23,7 +23,7 @@ module.exports = class ConfirmSale extends Talker.Request {
     handleResponding(exchange) {
         if (exchange.value === true) {
             exchange.write(Messages.confirmed);
-            this.postSale(exchange.topic.item);
+            this.postSale(exchange);
             return exchange;
         } else if (exchange.value === false) {
             exchange.write(Messages.cancelled);
@@ -42,8 +42,9 @@ module.exports = class ConfirmSale extends Talker.Request {
         item.active = true;
         item.save();
 
+        const channel = exchange.slack.getChannelGroupOrDMByID(item.channelId);
         const pool = new Talker.StatementPool(Messages.post);
         const typist = new Talker.Typist(pool.bind(exchange));
-        typist.send(item.channelId);
+        typist.send(channel);
     }
 }

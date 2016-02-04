@@ -2,7 +2,7 @@
 
 module.exports = {
     "getItemName": [
-        ["What do you want to call your aunction?"],
+        ["What do you want to call your auction?"],
         ["Gimme a name for this auction."],
     ],
     "gotItemName": [

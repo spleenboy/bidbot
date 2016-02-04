@@ -15,7 +15,7 @@ module.exports = {
                         ? ` Starting bid is *\$${item.price}*.\n`
                         : ` Price is *\$${item.price}*.\n`;
             }
-            return `Here's basically what I want to post in <#{item.channelId}>\n
+            return `Here's basically what I want to post in <#${item.channelId}>\n
 >>> <@${item.sellerId}> is holding ${what} for *${item.name}*\n
 ${item.description}\n
 ${price}
