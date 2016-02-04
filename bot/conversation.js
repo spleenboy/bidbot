@@ -20,6 +20,7 @@ module.exports.load = function(conversation, exchange) {
     const getRaffleItem = new Requests.GetRaffleItem();
     const getAuctionItem = new Requests.GetAuctionItem();
     const getSaleDescription = new Requests.GetSaleDescription();
+    const getSaleQuantity = new Requests.GetSaleQuantity();
     const getSaleDeadline = new Requests.GetSaleDeadline();
     const getSaleChannel = new Requests.GetSaleChannel();
     const confirmSale = new Requests.ConfirmSale();
@@ -52,8 +53,21 @@ module.exports.load = function(conversation, exchange) {
 
 
     // Handle raffles and auctions.
-    conversation.chain(getRaffleItem, getSaleDescription, getSaleDeadline, getSaleChannel, confirmSale);
-    conversation.chain(getAuctionItem, getSaleDescription, getSaleDeadline, getSaleChannel, confirmSale);
+    conversation.chain(
+        getRaffleItem,
+        getSaleQuantity,
+        getSaleDescription,
+        getSaleDeadline,
+        getSaleChannel,
+        confirmSale
+    );
+
+    // We only need to start the chain for Auction items.
+    // the rest is handled by the existing raffle chain
+    conversation.chain(
+        getAuctionItem,
+        getSaleDescription
+    );
 
     confirmSale.on('valid', (x) => {
         conversation.end();

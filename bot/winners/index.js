@@ -68,9 +68,10 @@ module.exports = class Winners extends EventEmitter {
 
     endRaffle(item) {
         const sq = Models.connection;
-        Models.Bid.findOne({
+        Models.Bid.findAll({
             where: {itemId: item.id},
-            order: [sq.fn("RANDOM")]
+            order: [sq.fn("RANDOM")],
+            limit: item.quantity,
         })
         .then((bids) => {
             item.active = false;

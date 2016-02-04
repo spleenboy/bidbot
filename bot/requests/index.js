@@ -8,6 +8,7 @@ module.exports = {
     GetAuctionItem: require('./get-auction-item'),
     GetSaleDescription: require('./get-sale-description'),
     GetSaleDeadline: require('./get-sale-deadline'),
+    GetSaleQuantity: require('./get-sale-quantity'),
     GetSaleChannel: require('./get-sale-channel'),
     ConfirmSale: require('./confirm-sale'),
 };

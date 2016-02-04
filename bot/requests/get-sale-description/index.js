@@ -1,7 +1,6 @@
 "use strict";
 
 const Talker = require('slackversational');
-const Models = require('../../../models/');
 const Messages = require('./messages.js');
 
 module.exports = class GetSaleDescription extends Talker.Request {
