@@ -6,9 +6,10 @@ module.exports = {
     GetBidAmount: require('./get-bid-amount'),
     GetRaffleItem: require('./get-raffle-item'),
     GetAuctionItem: require('./get-auction-item'),
-    GetSaleDescription: require('./get-sale-description'),
-    GetSaleDeadline: require('./get-sale-deadline'),
     GetSaleQuantity: require('./get-sale-quantity'),
+    GetSaleDescription: require('./get-sale-description'),
+    GetSalePrice: require('./get-sale-price'),
+    GetSaleDeadline: require('./get-sale-deadline'),
     GetSaleChannel: require('./get-sale-channel'),
     ConfirmSale: require('./confirm-sale'),
 };

@@ -1,5 +1,7 @@
 "use strict";
 
+const moment = require('moment');
+
 module.exports = {
     "getBidItem": [
         ["What do you want to bid on?"]

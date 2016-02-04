@@ -20,6 +20,7 @@ module.exports.load = function(conversation, exchange) {
     const getRaffleItem = new Requests.GetRaffleItem();
     const getAuctionItem = new Requests.GetAuctionItem();
     const getSaleDescription = new Requests.GetSaleDescription();
+    const getSalePrice = new Requests.GetSalePrice();
     const getSaleQuantity = new Requests.GetSaleQuantity();
     const getSaleDeadline = new Requests.GetSaleDeadline();
     const getSaleChannel = new Requests.GetSaleChannel();
@@ -57,6 +58,7 @@ module.exports.load = function(conversation, exchange) {
         getRaffleItem,
         getSaleQuantity,
         getSaleDescription,
+        getSalePrice,
         getSaleDeadline,
         getSaleChannel,
         confirmSale
@@ -75,7 +77,7 @@ module.exports.load = function(conversation, exchange) {
 
     // Handle bidding
     getBidItem.on('valid', (x) => {
-        if (x.item.type === "auction") {
+        if (x.topic.item.type === "auction") {
             setRequest(getBidAmount);
         } else {
             conversation.end();
