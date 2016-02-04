@@ -92,7 +92,8 @@ module.exports = class Winners extends EventEmitter {
     announce(item, bids) {
         const ctx = {item, bids};
         const statements = bids ? Messages.won(ctx) : Messages.lost(ctx);
-        const typist = new Talker.Typist(statements);
+        const pool = new Talker.StatementPool(statements);
+        const typist = new Talker.Typist(pool.select());
         const channel = this.slack.getChannelGroupOrDMByID(item.channelId);
         typist.send(channel);
     }
