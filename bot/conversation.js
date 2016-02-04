@@ -17,38 +17,15 @@ module.exports.load = function(conversation, exchange) {
     conversation.addRequest(getBidAmount);
 
     const getRaffleItem = new Requests.GetRaffleItem();
-    conversation.addRequest(getRaffleItem);
-
     const getAuctionItem = new Requests.GetAuctionItem();
-    conversation.addRequest(getAuctionItem);
-
     const getSaleDescription = new Requests.GetSaleDescription();
-    conversation.addRequest(getSaleDescription);
-
     const getSaleDeadline = new Requests.GetSaleDeadline();
-    conversation.addRequest(getSaleDeadline);
+    const getSaleChannel = new Requests.GetSaleChannel();
 
 
     function setRequest(action) {
         action && conversation.setRequest((rq) => rq === action);
     }
-
-
-    // Chains together multiple actions to be called
-    // in succession on valid exchanges.
-    function chain() {
-        const args = _.toArray(arguments);
-        let current = args.shift();
-        while (current) {
-            const next = args.shift();
-            if (next) {
-                console.log('chained', current.id, 'to', next.id);
-                current.on('valid', setRequest.bind(conversation, next));
-            }
-            current = next;
-        }
-    }
-
 
     // Handle the initial action
     getAction.on('valid', (x) => {
@@ -66,8 +43,8 @@ module.exports.load = function(conversation, exchange) {
 
 
     // Handle raffles and auctions.
-    chain(getRaffleItem, getSaleDescription, getSaleDeadline);
-    chain(getAuctionItem, getSaleDescription, getSaleDeadline);
+    conversation.chain(getRaffleItem, getSaleDescription, getSaleDeadline, getSaleChannel);
+    conversation.chain(getAuctionItem, getSaleDescription, getSaleDeadline, getSaleChannel);
 
 
     getBidItem.on('valid', (x) => {
