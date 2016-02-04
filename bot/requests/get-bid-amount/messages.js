@@ -11,6 +11,6 @@ module.exports = {
         [(x) => `Nope. That bid is below the current high bid of _\$${x.topic.item.highBid}_`],
     ],
     "bidReceived": [
-        [(x) => `Awesome! I got your ${x.topic.bid.price > 0 ? '*$' + x.topic.bid.price + '*': ''} bid for _${x.topic.item.name}_`],
+        [(x) => `Awesome! I got your *\$${x.topic.bid.price}* bid for _${x.topic.item.name}_`],
     ],
 }

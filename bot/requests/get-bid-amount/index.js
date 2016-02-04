@@ -23,8 +23,12 @@ module.exports = class GetBidAmount extends Talker.Request {
 
     handleResponding(exchange) {
         if (exchange.valid) {
-            exchange.topic.bid.price = parseFloat(exchange.value);
+            exchange.topic.bid.price = exchange.value;
             exchange.topic.bid.save();
+
+            exchange.topic.item.highBid = exchange.value;
+            exchange.topic.item.save();
+
             exchange.write(this.responses);
             exchange.ended = true;
         }
