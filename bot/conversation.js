@@ -21,6 +21,7 @@ module.exports.load = function(conversation, exchange) {
     const getSaleDescription = new Requests.GetSaleDescription();
     const getSaleDeadline = new Requests.GetSaleDeadline();
     const getSaleChannel = new Requests.GetSaleChannel();
+    const confirmSale = new Requests.ConfirmSale();
 
 
     function setRequest(action) {
@@ -43,8 +44,8 @@ module.exports.load = function(conversation, exchange) {
 
 
     // Handle raffles and auctions.
-    conversation.chain(getRaffleItem, getSaleDescription, getSaleDeadline, getSaleChannel);
-    conversation.chain(getAuctionItem, getSaleDescription, getSaleDeadline, getSaleChannel);
+    conversation.chain(getRaffleItem, getSaleDescription, getSaleDeadline, getSaleChannel, confirmSale);
+    conversation.chain(getAuctionItem, getSaleDescription, getSaleDeadline, getSaleChannel, confirmSale);
 
 
     getBidItem.on('valid', (x) => {

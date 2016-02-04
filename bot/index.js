@@ -44,16 +44,8 @@ module.exports = class Bot {
 
 
     open() {
-        this.winners = new Winners();
-        this.winners.on('won', this.bidWon.bind(this));
+        this.winners = new Winners(this.slack);
         this.winners.track();
         logger.info(`Connected to ${this.slack.team.name} as @${this.slack.self.name}`);
-    }
-
-
-    bidWon(item, bid) {
-        item.winner = bid;
-        logger.info("Winner winner", item);
-        let state = bid ? item.type + "Won" : item.type + "Lost";
     }
 }

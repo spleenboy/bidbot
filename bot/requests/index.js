@@ -9,4 +9,5 @@ module.exports = {
     GetSaleDescription: require('./get-sale-description'),
     GetSaleDeadline: require('./get-sale-deadline'),
     GetSaleChannel: require('./get-sale-channel'),
+    ConfirmSale: require('./confirm-sale'),
 };

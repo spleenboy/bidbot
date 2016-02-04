@@ -53,13 +53,6 @@ const Schema = {
     endsOn: {
         type: Sequelize.DATE,
     },
-    winnerId: {
-        type: Sequelize.UUID,
-        references: {
-            model: Bid,
-            key: 'id',
-        }
-    },
 };
 
 const Settings = {
