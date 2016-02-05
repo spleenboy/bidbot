@@ -30,8 +30,7 @@ module.exports = class Bot {
         slack.on('error', this.error.bind(this));
 
         const dispatcher = new Talker.Dispatcher(slack);
-
-        dispatcher.exclude = (message) => !message.channel.is_im;
+        dispatcher.exclude = conversation.exclude;
         dispatcher.on('start', conversation.load);
 
         slack.login();
