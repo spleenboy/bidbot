@@ -6,8 +6,11 @@ const Models = require('../models');
 const Requests = require('./requests/');
 const Abandoned = require('./validators/abandoned');
 const log = require('../util/logger.js');
+const config = require('../config/local.json');
 
 module.exports.load = function(conversation, exchange) {
+    conversation.trickle.delay = config.pause;
+
     const getAction = new Requests.GetAction();
     conversation.addRequest(getAction);
 
@@ -59,8 +62,8 @@ module.exports.load = function(conversation, exchange) {
         getSaleQuantity,
         getSaleDescription,
         getSalePrice,
-        getSaleDeadline,
         getSaleChannel,
+        getSaleDeadline,
         confirmSale
     );
 
