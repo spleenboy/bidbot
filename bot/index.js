@@ -8,7 +8,7 @@ const Talker = require('slackversational');
 const config = require('../config/local.json');
 const messages = require('../config/messages');
 const logger = require('../util/logger');
-const load = require('./conversation');
+const conversations = require('./conversations');
 
 const Models = require('../models');
 const Winners = require('./winners');
@@ -25,6 +25,11 @@ module.exports = class Bot {
     }
 
 
+    send(msg) {
+        this.slack.sendMessage(msg.text, msg.channel);
+    }
+
+
     connect(slack) {
         this.slack = slack;
         this.dispatcher = new Talker.Dispatcher();
@@ -33,12 +38,10 @@ module.exports = class Bot {
         slack.on('error', this.error.bind(this));
         slack.on('message', this.dispatcher.messageHandler);
 
-        this.dispatcher.exclude = (exchange) => !exchange.type === Talker.Exchange.DM;
+        this.dispatcher.exclude = conversations.exclude
         this.dispatcher.on('start', (conversation, exchange) => {
-            conversation.on('say', (msg) => {
-                this.slack.sendMessage(msg.text, msg.channel);
-            });
-            load(conversation, exchange);
+            conversation.on('say', this.send.bind(this));
+            conversations.load(conversation, exchange);
         });
 
         slack.start();
@@ -52,6 +55,7 @@ module.exports = class Bot {
 
     open() {
         this.winners = new Winners(this.slack);
+        this.winners.on('say', this.send.bind(this));
         this.winners.track();
         logger.info(`Connected to Slack`);
     }

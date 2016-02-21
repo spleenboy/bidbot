@@ -9,7 +9,11 @@ module.exports = {
     "gotItemDeadline": [
         [(x) => {
             const done = moment(x.topic.item.endsOn).fromNow();
-            return `I hope you mean ${done}.`;
-        }]
+            return `I hope you mean _${done}_, because that's what I heard.`;
+        }],
+        ["Okay."],
+        ["Got it."],
+        ["OMG time flies."],
+        [":timer_clock:"],
     ],
 };

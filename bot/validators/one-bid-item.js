@@ -2,9 +2,11 @@
 
 const Validator = require('slackversational').Validators.Validator;
 
+const _ = require('lodash');
+
 module.exports = class OneBidItem extends Validator {
     validate(value) {
-        if (value && value.length === 1) {
+        if (_.isArray(value) && value.length === 1) {
             return true;
         }
 

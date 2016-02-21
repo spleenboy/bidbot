@@ -42,9 +42,6 @@ module.exports = class ConfirmSale extends Talker.Request {
         item.active = true;
         item.save();
 
-        const channel = exchange.slack.getChannelGroupOrDMByID(item.channelId);
-        const pool = new Talker.StatementPool(Messages.post);
-        const typist = new Talker.Typist(pool.bind(exchange));
-        typist.send(channel);
+        exchange.write(Messages.post, item.channelId);
     }
 }

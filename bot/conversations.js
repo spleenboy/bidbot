@@ -6,10 +6,49 @@ const Models = require('../models');
 const Requests = require('./requests/');
 const Abandoned = require('./validators/abandoned');
 const log = require('../util/logger.js');
+const config = require('../config/local.json');
 
-module.exports = function(conversation, exchange) {
+module.exports.exclude = function(exchange) {
+    if (exchange.type === Talker.Exchange.DM) {
+        return false;
+    }
+
+    /* @todo: Identify messages to @bidbot
+    if (exchange.value.indexOf(`<@${exchange.self.id}>`) >= 0) {
+        return false;
+    }
+    */
+
+    return true;
+}
+
+module.exports.load = function(conversation, exchange) {
+    conversation.trickle.delay = config.pause;
+    if (exchange.type === Talker.Exchange.DM) {
+        console.log("Loading private conversation");
+        loadPrivate(conversation, exchange);
+    } else {
+        console.log("Loading public conversation");
+        loadPublic(conversation, exchange);
+    }
+}
+
+
+function loadPublic(conversation, exchange) {
+    const help = new Requests.Help();
+    help.on('asked', (x) => {
+        conversation.end();
+    });
+    conversation.addRequest(help);
+}
+
+
+function loadPrivate(conversation, exchange) {
     const getAction = new Requests.GetAction();
     conversation.addRequest(getAction);
+
+    const help = new Requests.Help();
+    conversation.addRequest(help);
 
     const getBidItem = new Requests.GetBidItem();
     conversation.addRequest(getBidItem);
@@ -20,6 +59,8 @@ module.exports = function(conversation, exchange) {
     const getRaffleItem = new Requests.GetRaffleItem();
     const getAuctionItem = new Requests.GetAuctionItem();
     const getSaleDescription = new Requests.GetSaleDescription();
+    const getSalePrice = new Requests.GetSalePrice();
+    const getSaleQuantity = new Requests.GetSaleQuantity();
     const getSaleDeadline = new Requests.GetSaleDeadline();
     const getSaleChannel = new Requests.GetSaleChannel();
     const confirmSale = new Requests.ConfirmSale();
@@ -39,6 +80,7 @@ module.exports = function(conversation, exchange) {
         'bid': getBidItem,
         'auction': getAuctionItem,
         'raffle': getRaffleItem,
+        'help': help,
     };
 
     // Handle the initial action
@@ -46,14 +88,32 @@ module.exports = function(conversation, exchange) {
         if (x.value in actions) {
             setRequest(actions[x.value]);
         } else {
-            conversation.end();
+            x.ended = true;
         }
+    });
+
+    help.on('asked', (x) => {
+        x.ended = true;
     });
 
 
     // Handle raffles and auctions.
-    conversation.chain(getRaffleItem, getSaleDescription, getSaleDeadline, getSaleChannel, confirmSale);
-    conversation.chain(getAuctionItem, getSaleDescription, getSaleDeadline, getSaleChannel, confirmSale);
+    conversation.chain(
+        getRaffleItem,
+        getSaleQuantity,
+        getSaleDescription,
+        getSalePrice,
+        getSaleChannel,
+        getSaleDeadline,
+        confirmSale
+    );
+
+    // We only need to start the chain for Auction items.
+    // the rest is handled by the existing raffle chain
+    conversation.chain(
+        getAuctionItem,
+        getSaleDescription
+    );
 
     confirmSale.on('valid', (x) => {
         conversation.end();
@@ -61,7 +121,7 @@ module.exports = function(conversation, exchange) {
 
     // Handle bidding
     getBidItem.on('valid', (x) => {
-        if (x.item.type === "auction") {
+        if (x.topic.item.type === "auction") {
             setRequest(getBidAmount);
         } else {
             conversation.end();

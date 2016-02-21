@@ -29,7 +29,7 @@ module.exports = class GetBidItem extends Talker.Request {
                 exchange.write(Messages.noItemsForBid);
                 exchange.ended = true;
             } else {
-                exchange.write(Message.itemsForBid);
+                exchange.write(Messages.itemsForBid);
                 exchange.write(Messages.getBidItem);
             }
         });
@@ -37,8 +37,9 @@ module.exports = class GetBidItem extends Talker.Request {
 
 
     handleResponding(exchange) {
-        if (!exchange.valid || !exchange.value) {
-            return;
+        if (!exchange.valid) {
+            console.log("Responding", exchange.value);
+            return exchange;
         }
 
         const item = exchange.value[0];
@@ -52,13 +53,14 @@ module.exports = class GetBidItem extends Talker.Request {
             exchange.topic.bid = bid;
             if (item.type === "auction") {
                 // Let the conversation move to getting bid amount
-                return;
+                return exchange;
             } else if (created) {
-                exchange.write(messages.bidReceived);
+                exchange.write(Messages.bidReceived);
             } else {
-                exchange.write(messages.bidReceivedAlready);
+                exchange.write(Messages.bidReceivedAlready);
             }
             exchange.ended = true;
+            return exchange;
         });
     }
 }

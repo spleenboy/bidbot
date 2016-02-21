@@ -11,6 +11,8 @@ module.exports = class Action extends Parser {
             return "raffle";
         } else if (this.hasAnyWord(value, ['bid', 'buy', 'offer', 'list'])) {
             return "bid";
+        } else if (this.hasAnyWord(value, ['help', 'about'])) {
+            return "help";
         }
         return null;
     }

@@ -13,7 +13,6 @@ const INTERVAL_MS = 1000;
 module.exports = class Winners extends EventEmitter {
     constructor(slack) {
         super();
-        this.slack = slack;
     }
 
     track() {
@@ -68,9 +67,10 @@ module.exports = class Winners extends EventEmitter {
 
     endRaffle(item) {
         const sq = Models.connection;
-        Models.Bid.findOne({
+        Models.Bid.findAll({
             where: {itemId: item.id},
-            order: [sq.fn("RANDOM")]
+            order: [sq.fn("RANDOM")],
+            limit: item.quantity,
         })
         .then((bids) => {
             item.active = false;
@@ -90,11 +90,15 @@ module.exports = class Winners extends EventEmitter {
 
     announce(item, bids) {
         const ctx = {item, bids};
-        const statements = bids ? Messages.won : Messages.lost;
+        const statements = bids ? Messages.won(ctx) : Messages.lost(ctx);
         const pool = new Talker.StatementPool(statements);
-        const typist = new Talker.Typist(pool.bind(ctx));
-        const channel = this.slack.getChannelGroupOrDMByID(item.channelId);
-        typist.send(channel);
+
+        const messages = pool.bind(ctx);
+        const trickle = new Talker.Trickle();
+
+        messages.forEach((msg) => {
+            trickle.add(this.emit.bind(this, 'say', msg));
+        });
     }
 
     stop() {

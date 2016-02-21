@@ -9,12 +9,10 @@ module.exports = class GetAction extends Talker.Request {
     constructor(id) {
         super(id);
         this.id = "get-action";
-        this.questions = Messages.getAction;
         this.processors = [
             new ParseAction(),
             new Confused(),
         ];
-        this.responses = [];
     }
 
 
@@ -27,9 +25,11 @@ module.exports = class GetAction extends Talker.Request {
         .then(() => {
             if (exchange.value) {
                 exchange.valid = true;
-                return super.handleResponding(exchange);
+                this.emit('valid', exchange);
+            } else {
+                exchange.write(Messages.getAction);
             }
-            return super.handleAsking(exchange);
+            return exchange;
         });
     }
 }
