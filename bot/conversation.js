@@ -7,7 +7,7 @@ const Requests = require('./requests/');
 const Abandoned = require('./validators/abandoned');
 const log = require('../util/logger.js');
 
-module.exports.load = function(conversation, exchange) {
+module.exports = function(conversation, exchange) {
     const getAction = new Requests.GetAction();
     conversation.addRequest(getAction);
 

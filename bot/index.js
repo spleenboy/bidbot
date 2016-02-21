@@ -2,12 +2,13 @@
 
 const _ = require('lodash');
 const moment = require('moment');
+const Slack = require('slack-client');
 const Talker = require('slackversational');
 
 const config = require('../config/local.json');
 const messages = require('../config/messages');
 const logger = require('../util/logger');
-const conversation = require('./conversation');
+const load = require('./conversation');
 
 const Models = require('../models');
 const Winners = require('./winners');
@@ -26,15 +27,21 @@ module.exports = class Bot {
 
     connect(slack) {
         this.slack = slack;
+        this.dispatcher = new Talker.Dispatcher();
+
         slack.on('open', this.open.bind(this));
         slack.on('error', this.error.bind(this));
+        slack.on('message', this.dispatcher.messageHandler);
 
-        const dispatcher = new Talker.Dispatcher(slack);
+        this.dispatcher.exclude = (exchange) => !exchange.type === Talker.Exchange.DM;
+        this.dispatcher.on('start', (conversation, exchange) => {
+            conversation.on('say', (msg) => {
+                this.slack.sendMessage(msg.text, msg.channel);
+            });
+            load(conversation, exchange);
+        });
 
-        dispatcher.exclude = (message) => !message.channel.is_im;
-        dispatcher.on('start', conversation.load);
-
-        slack.login();
+        slack.start();
     }
 
 
@@ -46,6 +53,6 @@ module.exports = class Bot {
     open() {
         this.winners = new Winners(this.slack);
         this.winners.track();
-        logger.info(`Connected to ${this.slack.team.name} as @${this.slack.self.name}`);
+        logger.info(`Connected to Slack`);
     }
 }
