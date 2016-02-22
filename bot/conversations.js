@@ -9,20 +9,22 @@ const log = require('../util/logger.js');
 const config = require('../config/local.json');
 
 module.exports.exclude = function(exchange) {
-    if (exchange.channel.is_im) {
+    if (exchange.type === Talker.Exchange.DM) {
         return false;
     }
 
-    if (exchange.value.indexOf(`<@${exchange.slack.self.id}>`) >= 0) {
+    /* @todo: Identify messages to @bidbot
+    if (exchange.value.indexOf(`<@${exchange.self.id}>`) >= 0) {
         return false;
     }
+    */
 
     return true;
 }
 
 module.exports.load = function(conversation, exchange) {
     conversation.trickle.delay = config.pause;
-    if (exchange.channel.is_im) {
+    if (exchange.type === Talker.Exchange.DM) {
         console.log("Loading private conversation");
         loadPrivate(conversation, exchange);
     } else {
