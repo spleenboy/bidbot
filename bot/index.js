@@ -54,7 +54,7 @@ module.exports = class Bot {
 
 
     open() {
-        this.winners = new Winners(this.slack);
+        this.winners = new Winners();
         this.winners.on('say', this.send.bind(this));
         this.winners.track();
         logger.info(`Connected to Slack`);

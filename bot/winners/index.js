@@ -60,8 +60,9 @@ module.exports = class Winners extends EventEmitter {
                 bid.save();
             }
 
-            this.announce(item, [bid]);
-            return this.emit("won", item, [bid]);
+            const result = bid ? [bid] : [];
+            this.announce(item, result);
+            return this.emit("won", item, result);
         });
     }
 
@@ -90,13 +91,17 @@ module.exports = class Winners extends EventEmitter {
 
     announce(item, bids) {
         const ctx = {item, bids};
-        const statements = bids ? Messages.won(ctx) : Messages.lost(ctx);
+        const statements = bids && bids.length ? Messages.won(ctx) : Messages.lost(ctx);
         const pool = new Talker.StatementPool(statements);
 
         const messages = pool.bind(ctx);
         const trickle = new Talker.Trickle();
 
-        messages.forEach((msg) => {
+        messages.forEach((text) => {
+            const msg = {
+                text: text,
+                channel: item.channelId
+            };
             trickle.add(this.emit.bind(this, 'say', msg));
         });
     }
