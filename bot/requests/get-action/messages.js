@@ -12,6 +12,11 @@ module.exports = {
         ["Did you know that 90% of US paper money carry traces of cocaine?"],
         ["More Monopoly money is printed each year than real money. Crazy, right?"],
         ["A penny for your thoughts?", "Just kidding! I don't really care."],
+        ["I am Bid Bot, hear me roar."],
+        ["Greetings, human."],
+        ["Did someone knock?"],
+        ["Sup, home skillet? :egg:"],
+        ["Greetings and solicitations, friend."],
     ],
 
     "getAction": [
