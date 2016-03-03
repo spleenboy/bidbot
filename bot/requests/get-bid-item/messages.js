@@ -26,7 +26,7 @@ module.exports = {
             items.forEach((item, i) => {
                 const deadline = moment(item.endsOn).fromNow();
                 if (item.type === 'auction') {
-                    const highbid = item.highBid ? ` Current high bid is \$${item.highBid}.` : `Starting bid is \$${item.price}.`;
+                    const highbid = item.highBid ? ` Current high bid is \$${item.highBid}.` : ` Starting bid is \$${item.price}.`;
                     list.push(` • \`${item.abbr}\`: _${item.name}_ is an auction ending ${deadline}.${highbid}`);
                 } else {
                     const price = item.price ? ` Price: *\$${item.price}*.` : ` *FREE!*`;

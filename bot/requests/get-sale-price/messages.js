@@ -9,7 +9,9 @@ module.exports = {
             } else {
                 return "What is the starting bid?";
             }
-        }],
+        },
+        "_Enter a dollar amount like *3.50*, or you can say *free* or *nothing*_"
+        ],
     ],
     "gotItemPrice": [],
 };
