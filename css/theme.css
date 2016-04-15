@@ -48,6 +48,11 @@ h1 {
   font-size: 80px;
 }
 
+a:hover {
+  text-decoration: none;
+  text-shadow: 0 0 1px rgb(53, 220, 246);
+}
+
 blockquote {
   line-height: 2em;
 }
@@ -72,6 +77,12 @@ section {
   padding: 1em;
 }
 
+footer {
+  padding: 1em;
+  background-color: var(--gray);
+  text-align: center;
+}
+
 .sm {font-size: 0.8em;} 
 .md {font-size: 1em;}
 .lg {font-size: 2em;}
@@ -85,42 +96,112 @@ section {
 }
 
 #intro {
+  height: 200px;
   background-color: var(--blue);
   text-align: center;
 }
 
-#quote {
-  background-color: var(--gray);
-  height: 50px;
+#intro h2 {
+  font-family: 'Bree serif';
 }
 
-#quote #logo {
+#quote {
+  height: 50px;
+  background-color: var(--gray);
+}
+
+#logo {
   position: relative;
   z-index: 1000;
-  margin-top: -50px;
-  width: 300px;
+}
+
+.nav-bar {
+  float: left;
+  width: 30%;
+  margin-top: -150px;
+  display: none;
+}
+
+@media (min-width: 750px) {
+  .nav-bar {
+    display: block;
+  }
+}
+
+.chapter {
+  width: 100%;
+  padding: 1em;
+}
+
+@media (min-width: 750px) {
+  .chapter {
+    width: 60%;
+    margin-left: 30%;
+  }
+}
+
+.nav li {
+  padding-left: 2em;
+  list-style: none;
+  font-size: 1.2em;
+}
+
+.nav li a:hover:after {
+  font-family: 'FontAwesome';
+  content: "\f0a4";
+  margin-left: 0.5em;
+  font-size: 0.9em;
 }
 
 #quote blockquote {
   width: 100%;
+  text-align: center;
   margin: 10px 0;
 }
 
-#about {
+@media (min-width: 750px) {
+  #quote blockquote {
+    width: 66%;
+    margin-left: 33%;
+    text-align: left;
+  }
+}
+
+#body {
   padding-top: 0;
 }
 
-#about .container {
+#body .container {
   padding-top: 2em;
   background-color: var(--primary);
   color: var(--background);
   min-height: 100%;
 }
 
-#about h2, h3 {
+#body h2, h3 {
   color: var(--blue);
 }
 
-#about .container .column {
+#body .container .column {
   padding-right: 2em;
+}
+
+.step {
+  margin-bottom: 1em;
+}
+
+.step .number {
+  display: inline-block;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  background-color: var(--pink);
+  border: 1px solid var(--background);
+  text-align: center;
+}
+
+.step .instructions {
+  margin-left: 40px;
+  display: inline;
 }

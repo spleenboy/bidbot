@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="./css/theme.css">
 </head>
 <body>
+
   <section id="intro">
     <div class="container">
       <h1 class="primary">Bidbot</h1>
@@ -13,46 +14,89 @@
       <a id="github-link" href="https://spleenboy.github.com/bidbot" title="Fork me on GitHub"><i class="fa fa-github xl"></i></a>
     </div>
   </section>
+
   <section id="quote">
     <div class="container">
-      <div class="row">
-        <div class="one-third column">
-          <img id="logo" src="./img/bot.png" width="100%">
-        </div>
-        <div class="two-thirds column">
-          <blockquote id="greeting" class="cyan"></blockquote>
-        </div>
-      </div>
+      <blockquote id="greeting" class="cyan"></blockquote>
     </div>
   </section>
 
-  <section id="about">
+  <section id="body">
     <div class="container">
-      <div class="row">
-        <div class="one-third column"></div>
-        <div class="two-thirds column">
-          <h3>About Me</h3>
-          <p>My name is Bidbot. I was made to manage timed auctions and raffles for you in Slack.</p>
-          <ul>
-            <li>An <b>auction</b> goes to the highest bidder. It has a starting price, but bidders control the final price.</li>
-            <li>A <b>raffle</b> a drawing with one or more randomly drawn winners. A raffle has a set price (or free). I pick the winner (or winners) at random when the raffle ends.</li>
-          </ul>
-        </div><!-- /.column -->
-      </div><!-- /.row -->
+      <div class="nav-bar">
+        <img id="logo" src="./img/bot.png" width="100%">
+        <ul class="nav">
+          <li><a href="#about">About Me</a></li>
+          <li><a href="#specs">My Specs</a></li>
+          <li><a href="#install">Installation</a></li>
+        </ul>
+      </div>
+
+      <div class="chapter" id="about">
+        <h3>About Me</h3>
+        <p>My name is Bidbot. I was made to manage timed auctions and raffles for you in Slack.</p>
+        <ul>
+          <li>An <b>auction</b> goes to the highest bidder. It has a starting price, but bidders control the final price.</li>
+          <li>A <b>raffle</b> a drawing with one or more randomly drawn winners. A raffle has a set price (or free). I pick the winner (or winners) at random when the raffle ends.</li>
+        </ul>
+      </div><!-- /.chapter -->
       <hr>
 
-      <div class="row">
-        <div class="two-thirds offset-by-one-third column">
-          <h3>My Specs</h3>
-          <ul>
-            <li>Written with node.js</li>
-          </ul>
-        </div><!-- /.column -->
-      </div><!-- /.row -->
+      <div class="chapter" id="specs">
+        <h3>My Specs</h3>
+        <ul>
+          <li>node.js</li>
+          <li><a href="https://github.com/slackhq/node-slack-client">slack-client</a></li>
+          <li>Sqlite storage</li>
+          <li>Depends on <a href="https://spleenboy.github.com/slackversational.git"><i class="fa fa-github-alt"></i> Slackversational</a> to manage conversation.</li>
+        </ul>
+      </div><!-- /.chapter -->
+      <hr>
+
+      <div class="chapter" id="install">
+        <h3>Installation</h3>
+
+        <div class="step">
+          <div class="number">1</div>
+          <div class="instructions">
+            Download.
+<pre><code>git clone https://github.com/spleenboy/bidbot.git ./bidbot
+cd bidbot
+cp config/example.json config/local.json
+npm install</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="number">2</div>
+          <div class="instructions"><a href="https://api.slack.com/bot-users#custom_bot_users">Set up your Slack bot.</a></div>
+        </div>
+
+        <div class="step">
+          <div class="number">3</div>
+          <div class="instructions">
+              Edit <code>config/local.json</code> and add your Slack token.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="number">4</div>
+          <div class="instructions">
+            Start me up.
+            <pre><code>npm start</code></pre>
+          </div>
+        </div>
+
+      </div><!-- /.chapter -->
       <hr>
 
     </div><!-- /.container -->
   </section>
+
+  <footer>
+    <p>Bidbot: your friendly arbiter of Slack auctions and raffles</p>
+    <a href="https://spleenboy.github.com/bidbot" class="sm"><i class="fa fa-github"></i> Fork me on Github</a>
+  </footer>
 
   <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
   <script src="./js/init.js"></script>
