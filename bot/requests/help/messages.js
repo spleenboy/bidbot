@@ -2,9 +2,12 @@
 
 module.exports = {
     "greetings": [
-        ["I am Bid Bot, hear me roar."],
-        ["Greetings, human."],
-        ["Did someone knock?"],
+        ["I'm here to help."],
+        ["Here's the deal."],
+        ["Let me tell you a little something about myself."],
+        ["..."],
+        ["Have *I* got a story to tell *you*..."],
+        ["_...retrieving `help` punch card..._", "Okay."],
     ],
     "about": [[
         `I was made to manage auctions and raffles for you. An *auction* goes to the highest bidder. A *raffle* is a drawing with one or more randomly drawn winners. Both are timed events with a deadline you set. A raffle has a set price (or free). An auction has a starting price, but bidders can increase the final cost.\n

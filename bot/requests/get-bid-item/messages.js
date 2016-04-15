@@ -4,13 +4,13 @@ const moment = require('moment');
 
 module.exports = {
     "getBidItem": [
-        ["What do you want to bid on?"]
+        ["What do you want to bid on? _(Say `nm` to cancel)_"]
     ],
     "bidItemNotFound": [
-        ["I can't find what you're looking for. Please use the `ID` I made up for the item."]
+        ["I can't find what you're looking for. Please use the `ID` I made up for the item or say `nm` to cancel."]
     ],
     "bidItemFoundMany": [
-        ["I found more than one item with that id. What are the odds?"]
+        ["I found more than one item with that id. What are the odds? Pretty dang slim."],
     ],
     "bidReceived": [
         [(x) => `Awesome! I got your bid for _${x.topic.item.name}_`],
@@ -26,7 +26,7 @@ module.exports = {
             items.forEach((item, i) => {
                 const deadline = moment(item.endsOn).fromNow();
                 if (item.type === 'auction') {
-                    const highbid = item.highBid ? ` Current high bid is \$${item.highBid}.` : `Starting bid is \$${item.price}.`;
+                    const highbid = item.highBid ? ` Current high bid is \$${item.highBid}.` : ` Starting bid is \$${item.price}.`;
                     list.push(` • \`${item.abbr}\`: _${item.name}_ is an auction ending ${deadline}.${highbid}`);
                 } else {
                     const price = item.price ? ` Price: *\$${item.price}*.` : ` *FREE!*`;
@@ -43,5 +43,6 @@ module.exports = {
         ["I hate to break it to you, but no one has anything up for bid."],
         ["This sucks. There's nothing available."],
         ["Are you ready?", "For disappointment?", "Because there's nothing up for bid."],
+        ["Well that's awkward.", "Nothing is up for bidding right now."],
     ],
 };
