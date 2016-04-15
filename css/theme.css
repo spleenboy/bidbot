@@ -108,6 +108,7 @@ footer {
 #quote {
   height: 50px;
   background-color: var(--gray);
+  z-index: 900;
 }
 
 #logo {
@@ -133,10 +134,18 @@ footer {
   padding: 1em;
 }
 
+.chapter pre {
+  margin-right: 40px;
+}
+
 @media (min-width: 750px) {
   .chapter {
     width: 60%;
     margin-left: 30%;
+  }
+
+  .chapter pre {
+    margin-left: -40%;
   }
 }
 
