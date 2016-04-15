@@ -223,12 +223,13 @@ footer .callout {
   width: 40px;
   height: 40px;
   font-size: 40px;
+  padding: 5px 5px 3px 5px;
   background-color: var(--pink);
   border: 1px solid var(--background);
   text-align: center;
 }
 
 .step .instructions {
-  margin-left: 40px;
+  margin-left: 10px;
   display: inline;
 }
