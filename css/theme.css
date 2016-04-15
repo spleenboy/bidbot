@@ -1,0 +1,126 @@
+@import url(https://fonts.googleapis.com/css?family=Lobster|Bree+Serif);
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css);
+
+:root {
+  --cyan: rgb(53, 220, 246);
+  --pink: rgb(234, 64, 170);
+  --primary: rgb(244, 244, 244);
+  --secondary: rgb(51, 62, 163);
+  --blue: rgb(51, 62, 163);
+  --gray: rgb(82, 82, 82);
+  --background: rgb(22, 22, 22);
+}
+
+.primary, .white {
+  color: var(--primary);
+}
+
+.secondary, .blue {
+  color: var(--secondary);
+}
+
+.accent, .cyan {
+  color: var(--cyan);
+}
+
+.secondary-accent, .pink {
+  color: var(--pink);
+}
+
+.background, .black {
+  color: var(--background);
+}
+
+
+body {
+  background-color: var(--background);
+  color: var(--primary);
+  font-family: 'Bree serif', serif;
+  font-size: 18px;
+  line-height: 1.8em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Lobster', cursive;
+}
+
+h1 {
+  font-size: 80px;
+}
+
+blockquote {
+  line-height: 2em;
+}
+
+blockquote:before, blockquote:after {
+  font-family: 'FontAwesome';
+  margin: 10px;
+  position: relative;
+  bottom: 10;
+  font-size: 36px;
+}
+
+blockquote:before {
+  content: "\f10d";
+}
+
+blockquote:after {
+  content: "\f10e";
+}
+
+section {
+  padding: 1em;
+}
+
+.sm {font-size: 0.8em;} 
+.md {font-size: 1em;}
+.lg {font-size: 2em;}
+.xl {font-size: 3em;}
+
+
+#github-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#intro {
+  background-color: var(--blue);
+  text-align: center;
+}
+
+#quote {
+  background-color: var(--gray);
+  height: 50px;
+}
+
+#quote #logo {
+  position: relative;
+  z-index: 1000;
+  margin-top: -50px;
+  width: 300px;
+}
+
+#quote blockquote {
+  width: 100%;
+  margin: 10px 0;
+}
+
+#about {
+  padding-top: 0;
+}
+
+#about .container {
+  padding-top: 2em;
+  background-color: var(--primary);
+  color: var(--background);
+  min-height: 100%;
+}
+
+#about h2, h3 {
+  color: var(--blue);
+}
+
+#about .container .column {
+  padding-right: 2em;
+}

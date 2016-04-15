@@ -1,9 +1,60 @@
 <html>
 <head>
-    <title>Bidbot</title>
+  <title>Bidbot</title>
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/skeleton.css">
+  <link rel="stylesheet" href="./css/theme.css">
 </head>
 <body>
-    <h1>Bidbot</h1>
-    <blockquote>An arbiter of Slack auctions and raffles.</blockquote>
+  <section id="intro">
+    <div class="container">
+      <h1 class="primary">Bidbot</h1>
+      <h2 class="secondary-accent">An arbiter of Slack auctions and raffles.</h2>
+      <a id="github-link" href="https://spleenboy.github.com/bidbot" title="Fork me on GitHub"><i class="fa fa-github xl"></i></a>
+    </div>
+  </section>
+  <section id="quote">
+    <div class="container">
+      <div class="row">
+        <div class="one-third column">
+          <img id="logo" src="./img/bot.png" width="100%">
+        </div>
+        <div class="two-thirds column">
+          <blockquote id="greeting" class="cyan"></blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <div class="row">
+        <div class="one-third column"></div>
+        <div class="two-thirds column">
+          <h3>About Me</h3>
+          <p>My name is Bidbot. I was made to manage timed auctions and raffles for you in Slack.</p>
+          <ul>
+            <li>An <b>auction</b> goes to the highest bidder. It has a starting price, but bidders control the final price.</li>
+            <li>A <b>raffle</b> a drawing with one or more randomly drawn winners. A raffle has a set price (or free). I pick the winner (or winners) at random when the raffle ends.</li>
+          </ul>
+        </div><!-- /.column -->
+      </div><!-- /.row -->
+      <hr>
+
+      <div class="row">
+        <div class="two-thirds offset-by-one-third column">
+          <h3>My Specs</h3>
+          <ul>
+            <li>Written with node.js</li>
+          </ul>
+        </div><!-- /.column -->
+      </div><!-- /.row -->
+      <hr>
+
+    </div><!-- /.container -->
+  </section>
+
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+  <script src="./js/init.js"></script>
 </body>
 </html>
