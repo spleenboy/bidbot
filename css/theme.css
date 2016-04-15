@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Lobster|Bree+Serif);
+@import url(https://fonts.googleapis.com/css?family=Lobster|Oxygen);
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css);
 
 :root {
@@ -35,7 +35,7 @@
 body {
   background-color: var(--background);
   color: var(--primary);
-  font-family: 'Bree serif', serif;
+  font-family: 'Oxygen', serif;
   font-size: 18px;
   line-height: 1.8em;
 }
@@ -113,7 +113,7 @@ footer .callout {
 }
 
 #intro h2 {
-  font-family: 'Bree serif';
+  font-family: 'Oxygen';
 }
 
 #quote {
