@@ -80,7 +80,18 @@ section {
 footer {
   padding: 1em;
   background-color: var(--gray);
-  text-align: center;
+  text-align: left;
+}
+
+footer .callout {
+  max-width: 40%;
+  margin-fight: 60%;
+}
+
+#footer-logo {
+  position: absolute;
+  right: 15%;
+  margin-top: -130px;
 }
 
 .sm {font-size: 0.8em;} 

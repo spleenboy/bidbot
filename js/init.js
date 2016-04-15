@@ -5,7 +5,11 @@ var QUOTES = [
   "Bidbot, at your service!",
   "Yo yo yo.",
   "Hey (is for horses)",
-  "Money money money money money. Am I right?"
+  "Money money money money money.",
+  "Bid, auction, or raffle?",
+  "I feel like I virtually know you.",
+  "Beep boop bop boop.",
+  "Are you in bid trouble?"
 ];
 
 jQuery(function($) {
