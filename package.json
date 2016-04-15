@@ -1,7 +1,7 @@
 {
   "name": "bidbot",
   "version": "1.0.0",
-  "description": "Arbiter of auctions and raffles",
+  "description": "Arbiter of Slack auctions and raffles",
   "main": "index.js",
   "scripts": {
     "start": "node . --harmony --strict | ./node_modules/.bin/bunyan",
