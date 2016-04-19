@@ -54,6 +54,10 @@ module.exports = class Bot {
 
 
     open() {
+        if (this.winners) {
+            return;
+        }
+
         this.winners = new Winners();
         this.winners.on('say', this.send.bind(this));
         this.winners.track();
